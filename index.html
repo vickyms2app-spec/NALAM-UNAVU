@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>NalamUnavu — AI-Powered Nutrition & Food Delivery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<meta name="description" content="NalamUnavu — AI-powered personalized nutrition and health-conscious food delivery." />
+<meta name="theme-color" content="#0B6E4F" />
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  :root{
+    --teal:#0B6E4F; --teal-dark:#07503A; --teal-tint:#E4F1EB;
+    --gold:#E8A33D; --gold-tint:#FDF1DE;
+    --coral:#D9724C; --coral-tint:#FBEAE2;
+    --info:#2563A8; --info-tint:#E3EEF8;
+    --ink:#152521; --ink-soft:#5B6D67; --mint:#F3F7F5; --white:#FFFFFF;
+    --red:#C1443C; --red-tint:#FBE9E7; --line:#DEE8E3;
+    --sidebar:#07301F;
+  }
+  body.dark{
+    --mint:#0E1613; --white:#16211D; --ink:#EAF3EF; --ink-soft:#9FB3AC; --line:#243430;
+    --teal-tint:#173B2E; --gold-tint:#3A2C15; --red-tint:#3A1F1C; --coral-tint:#3A241C; --sidebar:#04180F;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--mint); color:var(--ink); font-family:'Manrope',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+  .f-display{ font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+  .f-mono{ font-family:"Courier New",Consolas,monospace; }
+  a{ color:inherit; }
+  .hidden{ display:none !important; }
+  button{ font-family:inherit; cursor:pointer; }
+  input,select,textarea{ font-family:inherit; }
+
+  .btn{ border:none; border-radius:999px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:7px; }
+  .btn-primary{ background:var(--teal); color:#fff; }
+  .btn-primary:disabled{ opacity:.5; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--teal-dark); border:1.5px solid var(--teal); }
+  .btn-gold{ background:var(--gold); color:#3a2c15; }
+  .btn-coral{ background:var(--coral); color:#fff; }
+  .btn-sm{ padding:6px 12px; font-size:11px; }
+
+  .center-wrap{ min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:50px 20px; }
+  .brand{ display:flex; align-items:center; gap:8px; font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; color:var(--teal-dark); }
+  .brand .dot{ color:var(--coral); }
+  .eyebrow{ font-family:"Courier New",monospace; font-size:11.5px; letter-spacing:1.5px; color:var(--coral); font-weight:700; text-transform:uppercase; margin-bottom:10px; }
+  .section-title{ font-family:'Plus Jakarta Sans',sans-serif; font-size:28px; color:var(--ink); text-align:center; max-width:640px; }
+  .section-sub{ font-size:14px; color:var(--ink-soft); text-align:center; max-width:560px; margin-top:10px; }
+
+  /* landing */
+  .land-nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:10px; }
+  @media (max-width:480px){ .land-nav{ padding:14px 16px; } .land-hero{ padding:50px 18px 36px; } .land-hero h1{ font-size:28px; } }
+  .land-hero{ text-align:center; padding:70px 30px 50px; background:linear-gradient(180deg,var(--coral-tint),var(--mint)); }
+  .land-hero h1{ font-family:'Plus Jakarta Sans',sans-serif; font-size:38px; max-width:760px; margin:16px auto; }
+  .persona-row{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; max-width:800px; margin:26px auto 0; }
+  .persona-chip{ background:var(--white); border:1px solid var(--line); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; }
+  .feature-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; max-width:1000px; margin:40px auto; padding:0 30px; }
+  .feature-mini{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:18px; }
+  .feature-mini-title{ font-size:13.5px; font-weight:700; margin:8px 0 4px; }
+  .feature-mini-desc{ font-size:11.5px; color:var(--ink-soft); }
+
+  /* forms */
+  .form-card{ background:var(--white); border:1px solid var(--line); border-radius:20px; padding:36px; width:460px; margin-top:30px; }
+  .form-card.wide{ width:640px; }
+  .form-field{ margin-bottom:14px; }
+  .form-field label{ display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+  .form-field input, .form-field select, .form-field textarea{ width:100%; padding:11px 14px; border:1px solid var(--line); border-radius:10px; font-size:13.5px; background:var(--white); color:var(--ink); }
+  .form-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .inline-error{ color:var(--red); font-size:12px; margin-bottom:10px; }
+  .bmi-badge{ display:inline-flex; align-items:center; gap:6px; background:var(--teal-tint); color:var(--teal-dark); border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700; font-family:"Courier New",monospace; }
+  .back-link{ display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; margin-bottom:18px; }
+
+  /* app shell */
+  .dash-shell{ display:flex; min-height:100vh; }
+  .sidebar{ width:230px; background:var(--sidebar); color:#CFE3DB; flex-shrink:0; display:flex; flex-direction:column; padding:20px 14px; transition:width .15s; }
+  .sidebar.collapsed{ width:64px; padding:20px 10px; }
+  .sidebar.collapsed .sidebar-brand-text, .sidebar.collapsed .sidebar-item span{ display:none; }
+  .sidebar.collapsed .sidebar-item{ justify-content:center; }
+  .sidebar-brand{ display:flex; align-items:center; gap:8px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:16px; color:#fff; padding:6px 10px 22px; }
+  .sidebar-nav{ display:flex; flex-direction:column; gap:3px; flex:1; }
+  .sidebar-item{ display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:10px; font-size:12.5px; font-weight:600; cursor:pointer; color:#B9CFC5; }
+  .sidebar-item.active, .sidebar-item:hover{ background:rgba(255,255,255,.08); color:#fff; }
+  .dash-main{ flex:1; min-width:0; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:14px 26px; background:var(--white); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; }
+  .topbar-actions{ display:flex; align-items:center; gap:12px; position:relative; }
+  .wallet-chip{ font-family:"Courier New",monospace; font-size:12px; font-weight:700; background:var(--gold-tint); color:#8A5A16; border-radius:999px; padding:7px 14px; }
+  .icon-btn{ width:36px; height:36px; border-radius:999px; border:1px solid var(--line); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; }
+  .badge-count{ position:absolute; top:-5px; right:-5px; background:var(--coral); color:#fff; font-family:"Courier New",monospace; font-size:9px; font-weight:700; border-radius:999px; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
+  .dropdown-panel{ position:absolute; top:46px; right:0; width:290px; background:var(--white); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 30px rgba(0,0,0,.12); padding:8px; z-index:30; }
+  .dropdown-item{ padding:10px 12px; border-radius:8px; font-size:12px; }
+  .dropdown-item:hover{ background:var(--mint); }
+  .profile-avatar{ width:34px; height:34px; border-radius:999px; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; cursor:pointer; }
+
+  .dash-content{ padding:24px 28px 60px; max-width:1160px; }
+  .kpi-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+  .kpi-card{ background:var(--white); border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .kpi-icon{ width:32px; height:32px; border-radius:9px; background:var(--teal-tint); display:flex; align-items:center; justify-content:center; margin-bottom:9px; }
+  .kpi-value{ font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; }
+  .kpi-label{ font-family:"Courier New",monospace; font-size:9.5px; color:var(--ink-soft); margin-top:2px; }
+
+  .panel{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:18px; }
+  .panel-title{ font-size:14px; font-weight:700; margin-bottom:12px; }
+  .row{ display:flex; align-items:center; }
+  .between{ justify-content:space-between; }
+  .wrap{ flex-wrap:wrap; }
+  .gap8{ gap:8px; }
+
+  .data-table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .data-table th{ text-align:left; font-family:"Courier New",monospace; font-size:10.5px; color:var(--ink-soft); font-weight:600; padding:9px 8px; border-bottom:1px solid var(--line); }
+  .data-table td{ padding:11px 8px; border-bottom:1px solid var(--line); }
+  .status-chip{ font-family:"Courier New",monospace; font-size:10px; padding:3px 9px; border-radius:999px; background:var(--teal-tint); color:var(--teal-dark); }
+  .status-chip.warn{ background:var(--gold-tint); color:#8A5A16; }
+  .status-chip.danger{ background:var(--red-tint); color:var(--red); }
+
+  .bars{ display:flex; align-items:flex-end; gap:14px; height:185px; padding-top:8px; border-bottom:1.5px solid var(--line); }
+  .bar-col{ display:flex; flex-direction:column; align-items:center; flex:1; }
+  .bar-value{ font-family:"Courier New",monospace; font-size:10px; margin-bottom:4px; }
+  .bar-rect{ width:100%; max-width:38px; background:var(--teal); border-radius:5px 5px 0 0; }
+  .bar-label{ font-family:"Courier New",monospace; font-size:9px; color:var(--ink-soft); margin-top:6px; text-align:center; }
+
+  .thali-wrap{ display:flex; flex-direction:column; align-items:center; }
+  .thali-ring{ border-radius:999px; display:flex; align-items:center; justify-content:center; }
+  .thali-inner{ border-radius:999px; background:var(--white); display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .thali-label{ font-size:11px; font-weight:700; margin-top:4px; text-align:center; }
+
+  .meal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .meal-card{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:16px; display:flex; flex-direction:column; }
+  .meal-name{ font-size:13.5px; font-weight:700; margin-bottom:2px; }
+  .meal-restaurant{ font-family:"Courier New",monospace; font-size:9.5px; color:var(--ink-soft); margin-bottom:8px; }
+  .meal-macros{ display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-bottom:8px; }
+  .meal-macro{ background:var(--mint); border-radius:8px; padding:6px 4px; text-align:center; }
+  .meal-macro b{ display:block; font-size:12px; }
+  .meal-macro span{ font-family:"Courier New",monospace; font-size:8px; color:var(--ink-soft); }
+  .meal-tag-row{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+  .filter-chip{ background:var(--white); border:1px solid var(--line); border-radius:999px; padding:6px 13px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--ink-soft); }
+  .filter-chip.active{ background:var(--teal); color:#fff; border-color:var(--teal); }
+
+  .cart-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
+  .qty-btn{ width:26px; height:26px; border-radius:8px; border:1px solid var(--line); background:var(--white); display:flex; align-items:center; justify-content:center; }
+  .star-row{ display:flex; gap:4px; }
+  .star-btn{ background:none; border:none; font-size:18px; color:var(--line); }
+  .star-btn.filled{ color:var(--gold); }
+
+  .tracking-step{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .tracking-dot{ width:9px; height:9px; border-radius:999px; flex-shrink:0; }
+
+  .deliver-bar{ display:flex; align-items:center; justify-content:space-between; background:var(--coral-tint); border-radius:12px; padding:11px 16px; margin-bottom:16px; font-size:12.5px; }
+  .reorder-chip{ background:var(--white); border:1px solid var(--line); border-radius:12px; padding:8px 12px; display:flex; align-items:center; gap:10px; font-size:11.5px; font-weight:600; }
+  .restaurant-card{ background:var(--white); border:1px solid var(--line); border-radius:16px; padding:16px; display:flex; flex-direction:column; }
+  .view-toggle{ display:inline-flex; background:var(--mint); border-radius:999px; padding:3px; margin-bottom:10px; }
+  .view-toggle button{ border:none; background:transparent; border-radius:999px; padding:7px 16px; font-size:12px; font-weight:700; color:var(--ink-soft); cursor:pointer; }
+  .view-toggle button.active{ background:var(--white); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .partner-card{ background:var(--teal-tint); border-radius:12px; padding:12px; display:flex; align-items:center; gap:10px; margin-top:8px; }
+  .partner-avatar{ width:36px; height:36px; border-radius:999px; background:var(--teal); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+  .ai-reason-box{ background:var(--mint); border-radius:10px; padding:8px 10px; margin-bottom:9px; display:flex; flex-direction:column; gap:4px; }
+  .ai-reason{ display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--teal-dark); }
+  .ai-reason.caution{ color:var(--red); }
+
+  /* Swiggy/Zomato-style additions */
+  .offer-banner{ background:linear-gradient(90deg,var(--coral),#c25a37); color:#fff; border-radius:14px; padding:12px 16px; display:flex; align-items:center; gap:10px; margin-bottom:16px; font-size:12.5px; font-weight:600; }
+  .filter-chip.active-coral{ background:var(--coral); color:#fff; border-color:var(--coral); }
+  .veg-dot{ width:13px; height:13px; border:1.5px solid; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .veg-dot span{ width:6px; height:6px; border-radius:999px; }
+  .fav-btn{ background:none; border:none; font-size:16px; cursor:pointer; line-height:1; }
+  .meal-badge{ font-family:"Courier New",monospace; font-size:9px; font-weight:700; padding:2px 7px; border-radius:5px; }
+  .meal-badge.bestseller{ background:#FDECC8; color:#8A5A16; }
+  .meal-badge.trending{ background:var(--coral-tint); color:var(--coral); }
+  .sticky-cart-bar{ position:sticky; bottom:16px; background:var(--teal-dark); color:#fff; border-radius:14px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:600; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+  .logomark{ width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--teal),var(--coral)); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .portal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:760px; margin-top:36px; }
+  .portal-card{ background:var(--white); border:1.5px solid var(--line); border-radius:16px; padding:24px 18px; text-align:center; cursor:pointer; transition:border-color .15s, transform .15s; }
+  .portal-card:hover{ border-color:var(--teal); transform:translateY(-3px); }
+  .portal-icon-wrap{ width:44px; height:44px; border-radius:12px; background:var(--teal-tint); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+  .portal-label{ font-size:13.5px; font-weight:700; color:var(--ink); }
+  .portal-desc{ font-size:11px; color:var(--ink-soft); margin-top:4px; line-height:1.4; }
+  .status-chip.pending{ background:var(--gold-tint); color:#8A5A16; }
+  .status-chip.approved{ background:var(--teal-tint); color:var(--teal-dark); }
+  .status-chip.rejected{ background:var(--red-tint); color:var(--red); }
+  .status-chip.info{ background:var(--info-tint); color:var(--info); }
+  .checkbox-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+  .checkbox-item{ display:flex; align-items:center; gap:7px; font-size:12px; background:var(--mint); border-radius:8px; padding:8px 10px; }
+  .plus-banner{ background:linear-gradient(120deg,#1b1b2f,#2f2350); color:#fff; border-radius:16px; padding:20px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; }
+  .plus-badge{ font-family:"Courier New",monospace; font-size:10px; font-weight:700; background:var(--gold); color:#3a2c15; padding:3px 9px; border-radius:999px; }
+  .rating-tag{ background:var(--mint); border:1px solid var(--line); border-radius:999px; padding:5px 11px; font-size:11px; cursor:pointer; }
+  .rating-tag.selected{ background:var(--teal); color:#fff; border-color:var(--teal); }
+
+
+  /* Production UI refinements */
+  body{line-height:1.5;}
+  .land-hero{max-width:100%;}
+  .land-hero .section-sub{margin-left:auto;margin-right:auto;line-height:1.75;font-size:15px;}
+  .btn{min-height:40px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.08);}
+  .meal-card{box-shadow:0 8px 30px rgba(12,45,34,.055);overflow:hidden;}
+  .meal-image{width:100%;height:168px;object-fit:cover;border-radius:12px;margin-bottom:13px;background:var(--mint);}
+  .meal-name{font-size:15px;font-weight:800;line-height:1.35;}
+  .meal-restaurant{font-family:'Manrope',sans-serif;font-size:11.5px;font-weight:800;color:var(--ink);line-height:1.55;}
+  .match-chip{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:11px;padding:5px 10px;border-radius:999px;background:var(--teal-dark);color:#fff;}
+  .panel-title{font-size:15px;font-weight:800;}
+  .data-table th{font-family:'Manrope',sans-serif;font-size:11px;font-weight:800;}
+  .data-table td{font-size:12.5px;}
+  .portal-label{font-size:14px;font-weight:800;}
+  .portal-desc{font-size:12px;}
+  .footer-brand{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;}
+  @media (max-width:900px){
+    .feature-strip{grid-template-columns:repeat(2,1fr);padding:0 18px;}
+    .portal-grid{grid-template-columns:repeat(2,1fr);padding:0 14px;}
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .meal-grid{grid-template-columns:repeat(2,1fr);}
+    .dash-content{padding:20px 18px 80px;}
+    .form-card,.form-card.wide{width:min(94vw,640px);}
+  }
+  @media (max-width:640px){
+    .sidebar{position:fixed;z-index:60;left:0;top:0;bottom:0;width:244px;box-shadow:12px 0 30px rgba(0,0,0,.16);}
+    .sidebar.collapsed{width:0;padding:0;overflow:hidden;box-shadow:none;}
+    .dash-main{width:100%;}
+    .topbar{padding:12px 14px;gap:8px;}
+    .topbar-actions{gap:6px;}
+    .wallet-chip{display:none;}
+    .dash-content{padding:16px 14px 72px;}
+    .kpi-row,.meal-grid,.feature-strip,.portal-grid,.checkbox-grid,.form-grid2{grid-template-columns:1fr;}
+    .feature-strip{margin:26px auto;padding:0 16px;}
+    .portal-grid{width:100%;padding:0;}
+    .form-card{padding:22px 18px;}
+    .land-hero{padding:46px 18px 38px;}
+    .land-hero h1{font-size:31px;line-height:1.15;}
+    .section-title{font-size:24px;}
+    .meal-image{height:190px;}
+    .data-table{min-width:680px;}
+    .panel{overflow-x:auto;}
+  }
+
+  @media print{
+    .sidebar, .topbar, .btn, .no-print{ display:none !important; }
+    .dash-shell{ display:block; }
+    .dash-content{ padding:0; max-width:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LANDING ================= -->
+<section id="scr-landing" class="uscreen">
+  <nav class="land-nav">
+    <div class="brand"><div class="logomark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0118 0z"/><path d="M2 16h20"/></svg></div><span>NalamUnavu</span></div>
+    <div class="row gap8">
+      <button class="btn btn-ghost" onclick="goLogin('user')">Login</button>
+      <button class="btn btn-coral" onclick="goRegister('user')">Create Free Account</button>
+    </div>
+  </nav>
+  <div class="land-hero">
+    <div class="eyebrow">AI-POWERED PERSONALIZED NUTRITION</div>
+    <h1 class="f-display">Smarter food choices, personalized for your health</h1>
+    <div class="section-sub">NalamUnavu connects personalized nutrition guidance with trusted restaurant meals and delivery. Discover food matched to your goals, preferences and health profile, with additional support for clinically reviewed and post-discharge nutrition journeys.</div>
+    <div class="persona-row" id="persona-row"></div>
+    <div class="row gap8" style="justify-content:center; margin-top:26px;">
+      <button class="btn btn-coral" onclick="goRegister('user')">Create Free Account</button>
+      <button class="btn btn-ghost" onclick="goRegister('restaurant')">Register as a Restaurant</button>
+    </div>
+  </div>
+  <div class="feature-strip" id="feature-strip"></div>
+
+  <div class="section" style="max-width:1000px; margin:0 auto; padding:10px 30px 50px;">
+    <div class="panel" style="background:linear-gradient(135deg,var(--teal-tint),var(--coral-tint)); border:none;">
+      <div class="eyebrow" style="margin-bottom:8px;">NALAMUNAVU FOR STUDENTS</div>
+      <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; margin-bottom:8px;">Budget-friendly nutrition that fits a study schedule</div>
+      <div style="font-size:13px; color:var(--ink-soft); max-width:640px; margin-bottom:16px;">Tell us your budget and routine &mdash; AI builds quick, affordable meal plans that fit between classes and study sessions, from partner kitchens near your campus.</div>
+      <button class="btn btn-coral btn-sm" onclick="goRegister('user')">Get Student Nutrition Plan</button>
+    </div>
+  </div>
+
+  <div class="section" style="max-width:1000px; margin:0 auto; padding:0 30px 60px;">
+    <div class="section-title f-display" style="text-align:center; font-size:24px; margin-bottom:24px;">Built for every side of the platform</div>
+    <div class="portal-grid" style="max-width:900px; margin:0 auto;">
+      <div class="portal-card" onclick="goLogin('restaurant')"><div class="portal-icon-wrap" id="land-icon-restaurant"></div><div class="portal-label">Restaurant Partners</div><div class="portal-desc">Manage your menu, orders and nutrition data</div></div>
+      <div class="portal-card" onclick="goLogin('delivery')"><div class="portal-icon-wrap" id="land-icon-delivery"></div><div class="portal-label">Delivery Partners</div><div class="portal-desc">Accept and deliver diet-specific orders</div></div>
+      <div class="portal-card" onclick="goPortals()"><div class="portal-icon-wrap" id="land-icon-all"></div><div class="portal-label">All Portals</div><div class="portal-desc">User, Restaurant, Delivery, Admin, Super Admin</div></div>
+    </div>
+  </div>
+
+  <footer style="background:var(--sidebar); color:#B9CFC5; padding:30px; text-align:center;">
+    <div class="footer-brand" style="color:#fff;margin-bottom:6px;">NalamUnavu</div>
+    <div class="f-mono" style="font-size:11px;">&copy; Garden Greens Private Limited. All rights reserved.</div>
+  </footer>
+</section>
+
+<!-- ================= PORTAL SELECTION ================= -->
+<section id="scr-portals" class="uscreen hidden">
+  <div class="center-wrap">
+    <div class="back-link" onclick="location.hash='#/'"><span>&#8592; Back to home</span></div>
+    <div class="eyebrow">CHOOSE YOUR PORTAL</div>
+    <div class="section-title f-display">Sign in to NalamUnavu</div>
+    <div class="portal-grid" id="portal-grid"></div>
+  </div>
+</section>
+
+<!-- ================= LOGIN (role-aware) ================= -->
+<section id="scr-login" class="uscreen hidden">
+  <div class="center-wrap">
+    <div class="back-link" onclick="goPortals()"><span>&#8592; Back to portals</span></div>
+    <div class="eyebrow" id="login-eyebrow">/LOGIN</div>
+    <div class="section-title f-display" id="login-title">Log in to NalamUnavu</div>
+    <div class="form-card" id="login-form-card"></div>
+  </div>
+</section>
+
+<!-- ================= REGISTER: USER ================= -->
+<section id="scr-register-user" class="uscreen hidden">
+  <div class="center-wrap">
+    <div class="back-link" onclick="goPortals()"><span>&#8592; Back to portals</span></div>
+    <div class="eyebrow">/REGISTER/USER</div>
+    <div class="section-title f-display">Create your NalamUnavu account</div>
+    <div class="section-sub">This builds your first AI health analysis &mdash; you can edit it any time from your profile.</div>
+    <div class="form-card wide" id="register-form-card"></div>
+  </div>
+</section>
+
+<!-- ================= REGISTER: RESTAURANT ================= -->
+<section id="scr-register-restaurant" class="uscreen hidden">
+  <div class="center-wrap">
+    <div class="back-link" onclick="goPortals()"><span>&#8592; Back to portals</span></div>
+    <div class="eyebrow">/REGISTER/RESTAURANT</div>
+    <div class="section-title f-display">Register your restaurant</div>
+    <div class="section-sub">Your listing stays in Verification Pending until Super Admin approves it.</div>
+    <div class="form-card wide" id="register-restaurant-card"></div>
+  </div>
+</section>
+
+<!-- ================= REGISTER: DELIVERY PARTNER ================= -->
+<section id="scr-register-delivery" class="uscreen hidden">
+  <div class="center-wrap">
+    <div class="back-link" onclick="goPortals()"><span>&#8592; Back to portals</span></div>
+    <div class="eyebrow">/REGISTER/DELIVERY</div>
+    <div class="section-title f-display">Become a delivery partner</div>
+    <div class="section-sub">Your account stays in Verification Pending until Super Admin approves it.</div>
+    <div class="form-card wide" id="register-delivery-card"></div>
+  </div>
+</section>
+
+<!-- ================= BIZ SHELL (Restaurant / Delivery / Admin / Super Admin share this) ================= -->
+<div id="biz-shell" class="dash-shell hidden">
+  <aside class="sidebar" id="biz-sidebar">
+    <div class="row between" style="margin-bottom:4px;">
+      <div class="sidebar-brand" style="padding-bottom:0;"><div class="logomark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0118 0z"/><path d="M2 16h20"/></svg></div><span class="sidebar-brand-text">NalamUnavu</span></div>
+      <button class="icon-btn" style="background:transparent;border:none;" onclick="toggleBizSidebar()" id="biz-hamburger"></button>
+    </div>
+    <div class="sidebar-nav" id="biz-sidebar-nav"></div>
+    <div class="sidebar-item" onclick="bizLogout()" id="biz-logout-item"></div>
+  </aside>
+  <div class="dash-main">
+    <div class="topbar">
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:700;" id="biz-title"></div>
+        <div class="f-mono" style="font-size:10px; color:var(--ink-soft);" id="biz-sub"></div>
+      </div>
+      <div class="topbar-actions">
+        <span class="status-chip" id="biz-status-chip"></span>
+        <div class="profile-avatar" id="biz-avatar"></div>
+      </div>
+    </div>
+    <div class="dash-content" id="biz-content"></div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL (all protected /user/* routes) ================= -->
+
+<div id="u-shell" class="dash-shell hidden">
+  <aside class="sidebar" id="u-sidebar">
+    <div class="row between" style="margin-bottom:4px;">
+      <div class="sidebar-brand" style="padding-bottom:0;"><div class="logomark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0118 0z"/><path d="M2 16h20"/></svg></div><span class="sidebar-brand-text">NalamUnavu</span></div>
+      <button class="icon-btn" style="background:transparent;border:none;" onclick="toggleSidebar()" id="sidebar-hamburger"></button>
+    </div>
+    <div class="sidebar-nav" id="sidebar-nav"></div>
+    <div class="sidebar-item" onclick="logoutUser()" id="sidebar-logout"></div>
+  </aside>
+  <div class="dash-main">
+    <div class="topbar">
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif; font-size:17px; font-weight:700;" id="topbar-title"></div>
+        <div class="f-mono" style="font-size:10px; color:var(--ink-soft);" id="topbar-route"></div>
+      </div>
+      <div class="topbar-actions">
+        <div class="wallet-chip" id="wallet-chip"></div>
+        <div style="position:relative;">
+          <button class="icon-btn" onclick="toggleDropdown('notif')" id="notif-btn"></button>
+          <div class="dropdown-panel hidden" id="notif-dropdown"></div>
+        </div>
+        <div style="position:relative;">
+          <button class="icon-btn" onclick="route('orders')" id="cart-btn"></button>
+        </div>
+        <button class="icon-btn" onclick="toggleTheme()" id="theme-btn"></button>
+        <div style="position:relative;">
+          <div class="profile-avatar" onclick="toggleDropdown('profile')" id="profile-avatar"></div>
+          <div class="dropdown-panel hidden" id="profile-dropdown"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-content" id="u-content"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ICONS (shared design system)
+   ============================================================ */
+const ICONS = {
+  home:'<path d="M3 11l9-8 9 8M5 10v10h14V10"/>',
+  truck:'<path d="M2 8h11v9H2z"/><path d="M13 11h4l3 3v3h-7z"/><circle cx="6" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/>',
+  salad:'<path d="M3 12a9 9 0 0118 0z"/><path d="M2 16h20"/><path d="M9 12V6M13 12V4"/>',
+  user:'<circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-4 4-6 7-6s5.8 2 7 6"/>',
+  bell:'<path d="M6 10a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+  check:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  minus:'<path d="M5 12h14"/>',
+  chevron:'<path d="M9 6l6 6-6 6"/>',
+  alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6"/>',
+  trending:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3-5.5 7-5.5s7 2.2 7 5.5"/><circle cx="18" cy="9" r="2.4"/><path d="M15.5 14.4c2.7.4 4.5 2.3 4.5 5.6"/>',
+  building:'<rect x="4" y="3" width="16" height="18"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/>',
+  utensils:'<path d="M7 3v7M5 3v4a2 2 0 004 0V3M17 3s-2 2-2 5 2 4 2 4v9"/>',
+  droplet:'<path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/>',
+  rupee:'<path d="M6 4h12M6 9h12M6 4c4 0 7 1.5 7 5s-3 5-7 5l8 6"/>',
+  star:'<path d="M12 3l2.7 6 6.3.5-4.8 4.2 1.5 6.3-5.7-3.6-5.7 3.6 1.5-6.3-4.8-4.2 6.3-.5z"/>',
+  clipboard:'<rect x="5" y="4" width="14" height="17" rx="1.5"/><rect x="9" y="2.3" width="6" height="3.4" rx="1"/><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4"/>',
+  heartbeat:'<path d="M2 12h4l2-7 4 14 3-9 2 4h5"/>',
+  cooking:'<path d="M4 12a8 8 0 0016 0z"/><path d="M4 12a8 8 0 0116-.3"/><path d="M12 2v4"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>',
+  moon:'<path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/>',
+  logout:'<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+  file:'<path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M14 2v6h6"/>',
+  arrowleft:'<path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/>',
+  cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/><path d="M2 3h2l2.4 12.4a2 2 0 002 1.6h7.2a2 2 0 002-1.6L20 7H6"/>',
+  download:'<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/>',
+  shield:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  menu:'<path d="M3 6h18M3 12h18M3 18h18"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+  bike:'<circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17l4-8h4l4 8M10 9h3"/>',
+  phone:'<path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.5 2.1L7.9 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.5c.9.3 1.8.5 2.7.6a2 2 0 011.9 2z"/>'
+};
+function icon(name, size, color, sw){
+  sw = sw || 2; color = color || 'currentColor';
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';
+}
+const C = { teal:'#0B6E4F', gold:'#E8A33D', coral:'#D9724C', red:'#C1443C', info:'#2563A8' };
+
+/* ---- Safe, bounded chart helpers (fixes bars overflowing their container) ---- */
+function barsAgainstTarget(values, target, color){
+  const maxPx = 110;
+  return values.map((v,i)=>{
+    const pct = Math.max(0, Math.min(1, v/target));
+    const h = Math.max(4, Math.round(pct*maxPx));
+    return '<div class="bar-col"><div class="bar-value">'+v+'</div><div class="bar-rect" style="height:'+h+'px;background:'+color+';"></div><div class="bar-label">D'+(i+1)+'</div></div>';
+  }).join('');
+}
+function barsRelative(values, color){
+  const maxPx = 110;
+  const mn = Math.min.apply(null, values), mx = Math.max.apply(null, values);
+  const range = (mx - mn) || 1;
+  return values.map((v,i)=>{
+    const h = Math.max(6, Math.round(((v-mn)/range)*maxPx));
+    return '<div class="bar-col"><div class="bar-value">'+v+'</div><div class="bar-rect" style="height:'+h+'px;background:'+color+';"></div><div class="bar-label">D'+(i+1)+'</div></div>';
+  }).join('');
+}
+function barsScore(values, color){
+  const maxPx = 110;
+  return values.map((v,i)=>{
+    const h = Math.max(4, Math.min(maxPx, Math.round((v/100)*maxPx)));
+    return '<div class="bar-col"><div class="bar-value">'+v+'</div><div class="bar-rect" style="height:'+h+'px;background:'+color+';"></div><div class="bar-label">D'+(i+1)+'</div></div>';
+  }).join('');
+}
+function thaliRing(percent, size, color, label){
+  const deg = percent*3.6, inner = size-10;
+  return '<div class="thali-wrap" style="width:'+size+'px">'+
+    '<div class="thali-ring" style="width:'+size+'px;height:'+size+'px;padding:5px;background:conic-gradient('+color+' '+deg+'deg, var(--line) '+deg+'deg)">'+
+      '<div class="thali-inner f-display" style="width:'+inner+'px;height:'+inner+'px;font-size:'+(size*0.22)+'px;color:'+color+'">'+percent+'%</div>'+
+    '</div>'+(label?'<div class="thali-label">'+label+'</div>':'')+
+  '</div>';
+}
+function progressBar(label, value, target, unit, color){
+  const pct = Math.max(0, Math.min(100, Math.round((value/target)*100)));
+  return '<div style="margin-bottom:10px;">'+
+    '<div class="row between" style="margin-bottom:4px;"><span style="font-size:12px;">'+label+'</span><span class="f-mono" style="font-size:10.5px;color:var(--ink-soft);">'+Math.round(value)+' / '+Math.round(target)+' '+unit+'</span></div>'+
+    '<div style="background:var(--mint);border-radius:999px;height:8px;overflow:hidden;"><div style="width:'+pct+'%;height:100%;background:'+color+';border-radius:999px;"></div></div>'+
+  '</div>';
+}
+
+/* ============================================================
+   MEAL CATALOG
+   ============================================================ */
+const MEALS = [
+  {id:1,image:'/assets/meal-1.svg',name:'Grilled Chicken and Quinoa Bowl',restaurant:'FitMeal Kitchen',tags:['Muscle Gain','Healthy Living'],cuisine:'Continental',veg:false,calories:420,protein:38,carbs:34,fat:12,fiber:6,ingredients:'Chicken breast, quinoa, broccoli, olive oil',allergens:'None',benefits:'High protein supports muscle repair',price:220,prep:15,rating:4.6,distance:'1.2 km'},
+  {id:2,image:'/assets/meal-2.svg',name:'Diabetic-Friendly Millet Thali',restaurant:'Green Leaf Diet Kitchen',tags:['Diabetes Control'],cuisine:'South Indian',veg:true,calories:380,protein:14,carbs:52,fat:9,fiber:10,ingredients:'Foxtail millet, mixed vegetables, dal, curd',allergens:'Dairy',benefits:'Low glycemic index, supports blood sugar control',price:150,prep:20,rating:4.5,distance:'0.8 km'},
+  {id:3,image:'/assets/meal-3.svg',name:'Heart-Healthy Oats Upma',restaurant:'Anandha Bhavan Cloud Kitchen',tags:['Heart Care'],cuisine:'South Indian',veg:true,calories:290,protein:9,carbs:44,fat:7,fiber:8,ingredients:'Oats, vegetables, minimal oil',allergens:'None',benefits:'Low sodium and low saturated fat',price:120,prep:12,rating:4.4,distance:'1.5 km'},
+  {id:4,image:'/assets/meal-4.svg',name:'Kidney-Care Low-Potassium Bowl',restaurant:'Meenakshi Hospital Kitchen',tags:['Kidney Care'],cuisine:'North Indian',veg:true,calories:340,protein:16,carbs:40,fat:10,fiber:4,ingredients:'Rice, cauliflower, cabbage, paneer',allergens:'Dairy',benefits:'Low potassium and phosphorus',price:190,prep:18,rating:4.7,distance:'0.3 km'},
+  {id:5,image:'/assets/meal-5.svg',name:'Pregnancy Nutrition Bowl',restaurant:'Green Leaf Diet Kitchen',tags:['Pregnancy'],cuisine:'North Indian',veg:false,calories:480,protein:24,carbs:58,fat:14,fiber:9,ingredients:'Spinach, lentils, brown rice, boiled egg',allergens:'Egg',benefits:'Rich in folate and iron',price:210,prep:20,rating:4.6,distance:'0.8 km'},
+  {id:6,image:'/assets/meal-6.svg',name:'Senior Care Soft Diet Thali',restaurant:'Anandha Bhavan Cloud Kitchen',tags:['Senior Care'],cuisine:'South Indian',veg:true,calories:350,protein:18,carbs:46,fat:8,fiber:6,ingredients:'Soft rice, dal, steamed vegetables, curd',allergens:'Dairy',benefits:'Easy to digest, balanced nutrition',price:140,prep:15,rating:4.5,distance:'1.5 km'},
+  {id:7,image:'/assets/meal-7.svg',name:'Weight Loss Salad Bowl',restaurant:'FitMeal Kitchen',tags:['Weight Loss','Fat Loss'],cuisine:'Continental',veg:true,calories:260,protein:20,carbs:22,fat:9,fiber:8,ingredients:'Mixed greens, grilled paneer, chickpeas, lemon dressing',allergens:'Dairy',benefits:'High fiber and low calorie',price:170,prep:10,rating:4.6,distance:'1.2 km'},
+  {id:8,image:'/assets/meal-8.svg',name:'Weight Gain Power Bowl',restaurant:'FitMeal Kitchen',tags:['Weight Gain','Bulking'],cuisine:'Continental',veg:true,calories:620,protein:32,carbs:70,fat:20,fiber:7,ingredients:'Brown rice, peanut butter, banana, whole milk',allergens:'Nuts, Dairy',benefits:'Calorie-dense and muscle-supportive',price:240,prep:15,rating:4.5,distance:'1.2 km'},
+  {id:9,image:'/assets/meal-9.svg',name:'Student Quick Energy Meal',restaurant:'Anandha Bhavan Cloud Kitchen',tags:['Student Nutrition','Healthy Living'],cuisine:'North Indian',veg:true,calories:400,protein:18,carbs:55,fat:11,fiber:5,ingredients:'Whole wheat wrap, vegetables, paneer',allergens:'Dairy, Gluten',benefits:'Balanced, quick-prep meal',price:110,prep:10,rating:4.3,distance:'1.5 km'},
+  {id:10,image:'/assets/meal-10.svg',name:'Corporate Balanced Thali',restaurant:'Meenakshi Hospital Kitchen',tags:['Healthy Living'],cuisine:'South Indian',veg:true,calories:450,protein:20,carbs:55,fat:13,fiber:7,ingredients:'Rice, sambar, poriyal, curd',allergens:'Dairy',benefits:'Balanced macro-nutrients for a work day',price:160,prep:15,rating:4.7,distance:'0.3 km'},
+  {id:11,image:'/assets/meal-11.svg',name:'Chicken Manchurian Protein Bowl',restaurant:'FitMeal Kitchen',tags:['Muscle Gain'],cuisine:'Chinese',veg:false,calories:410,protein:34,carbs:36,fat:11,fiber:4,ingredients:'Chicken, bell peppers, brown rice, light soy sauce',allergens:'Soy',benefits:'High protein, lower sodium than regular Manchurian',price:230,prep:18,rating:4.5,distance:'1.2 km'},
+  {id:12,image:'/assets/meal-12.svg',name:'Sprout and Paneer Salad',restaurant:'Green Leaf Diet Kitchen',tags:['Weight Loss','Healthy Living'],cuisine:'North Indian',veg:true,calories:240,protein:18,carbs:20,fat:8,fiber:9,ingredients:'Mixed sprouts, paneer, cucumber, lemon',allergens:'Dairy',benefits:'High fiber, supports satiety',price:140,prep:8,rating:4.4,distance:'0.8 km'}
+];
+const FILTER_TAGS = ['All','Weight Loss','Weight Gain','Muscle Gain','Diabetes Control','Heart Care','Kidney Care','Pregnancy','Senior Care','Student Nutrition','Healthy Living'];
+const CUISINES = ['All Cuisines','South Indian','North Indian','Continental','Chinese'];
+const COUPONS = {
+  'NALAM50': {type:'percent', value:50, cap:100, desc:'50% OFF up to \u20b9100'},
+  'FREESHIP': {type:'shipping', value:0, cap:0, desc:'Free delivery on this order'},
+  'FIRST20': {type:'percent', value:20, cap:150, desc:'20% OFF up to \u20b9150 (new users)'}
+};
+function toggleFavorite(mealId){
+  const u = STATE.currentUser;
+  const idx = u.favorites.indexOf(mealId);
+  if (idx===-1) { u.favorites.push(mealId); pushNotification('Added to favorites.'); }
+  else { u.favorites.splice(idx,1); pushNotification('Removed from favorites.'); }
+  if (currentScreenName()==='recommended-foods') renderMealGrid();
+  if (currentScreenName()==='dashboard') renderDashboard();
+}
+
+function parseBudget(str){
+  if (!str) return 999;
+  const m = String(str).match(/(\d+)/);
+  return m ? parseFloat(m[1]) : 999;
+}
+function computeBMI(u){ return u.weight/((u.height/100)*(u.height/100)); }
+const CONDITION_TAG_MAP = [
+  ['diabet','Diabetes Control'], ['heart','Heart Care'], ['cardiac','Heart Care'],
+  ['kidney','Kidney Care'], ['renal','Kidney Care'], ['pregnan','Pregnancy'], ['senior','Senior Care']
+];
+const ALLERGEN_KEYWORDS = {
+  'Milk/Dairy':'dairy', 'Egg':'egg', 'Peanut':'nut', 'Tree Nuts':'nut', 'Soy':'soy',
+  'Wheat/Gluten':'gluten', 'Fish':'fish', 'Shellfish':'shellfish', 'Sesame':'sesame', 'Mustard':'mustard'
+};
+/* Multi-factor AI match engine: reasons over goal, medical conditions, BMI,
+   activity level, allergies, food preference, age/persona and budget.
+   Recomputed fresh from STATE.currentUser on every call, so any profile
+   edit (weight, height, conditions, goal, etc.) immediately changes every
+   score and explanation the next time a screen renders. */
+function mealMatchDetail(meal){
+  if (!STATE.currentUser) return {score:75, reasons:[]};
+  const u = STATE.currentUser;
+  let score = 55;
+  const reasons = [];
+
+  if (meal.tags.indexOf(u.goal) !== -1) { score += 22; reasons.push({text:'Matches your '+u.goal+' goal', type:'good'}); }
+
+  const condLower = (u.conditionsList||[]).concat(u.conditionsOther?[u.conditionsOther]:[]).join(' ').toLowerCase();
+  CONDITION_TAG_MAP.forEach(function(pair){
+    if (condLower.indexOf(pair[0])!==-1 && meal.tags.indexOf(pair[1])!==-1) { score += 16; reasons.push({text:'Supports your '+pair[1].toLowerCase()+' needs', type:'good'}); }
+  });
+
+  if (u.persona==='Pregnant Woman' && meal.tags.indexOf('Pregnancy')!==-1) { score += 10; reasons.push({text:'Tailored for pregnancy nutrition', type:'good'}); }
+  if ((u.persona==='Senior Citizen' || u.age>=60) && meal.tags.indexOf('Senior Care')!==-1) { score += 10; reasons.push({text:'Suited for senior nutrition needs', type:'good'}); }
+
+  const bmi = computeBMI(u);
+  if (bmi>=25) {
+    if (meal.tags.indexOf('Weight Loss')!==-1 || meal.tags.indexOf('Fat Loss')!==-1) { score += 8; reasons.push({text:'Calorie-conscious for your BMI ('+bmi.toFixed(1)+')', type:'good'}); }
+    else if (meal.calories>500) { score -= 10; reasons.push({text:'Higher-calorie than ideal for your current BMI', type:'caution'}); }
+  } else if (bmi<18.5 && meal.calories>=480) {
+    score += 8; reasons.push({text:'Calorie-dense to support healthy weight gain', type:'good'});
+  }
+
+  if ((u.activity==='Active'||u.activity==='Very Active') && meal.protein>=30) { score += 6; reasons.push({text:'High protein for your activity level', type:'good'}); }
+
+  if (u.preferences==='Vegetarian' && meal.veg) { score += 8; reasons.push({text:'Vegetarian, matching your preference', type:'good'}); }
+  if (u.preferences==='Non-Vegetarian' && !meal.veg) { score += 4; reasons.push({text:'Non-vegetarian, matching your preference', type:'good'}); }
+  if (u.preferences==='Vegetarian' && !meal.veg) { score -= 20; reasons.push({text:'Non-vegetarian \u2014 outside your vegetarian preference', type:'caution'}); }
+
+  const flaggedAllergens = (u.allergiesList || []).filter(function(a){
+    const kw = ALLERGEN_KEYWORDS[a] || a.toLowerCase();
+    return kw && meal.allergens.toLowerCase().indexOf(kw) !== -1;
+  });
+  if (flaggedAllergens.length > 0) { score -= 35; reasons.push({text:'Contains an allergen you\u2019ve flagged: '+flaggedAllergens.join(', '), type:'caution'}); }
+
+  const budget = parseBudget(u.budget);
+  if (meal.price <= budget) { score += 4; reasons.push({text:'Within your budget (\u20b9'+budget+')', type:'good'}); }
+  else if (meal.price > budget*1.3) { score -= 8; reasons.push({text:'Above your usual budget', type:'caution'}); }
+
+  score = Math.max(30, Math.min(99, Math.round(score)));
+  reasons.sort(function(a,b){ return (a.type==='good'?0:1) - (b.type==='good'?0:1); });
+  return {score:score, reasons:reasons};
+}
+function mealMatch(meal){ return mealMatchDetail(meal).score; }
+function restaurantMatchDetail(name){
+  const items = MEALS.filter(function(m){ return m.restaurant===name; });
+  const details = items.map(function(m){ return mealMatchDetail(m); });
+  const avgScore = Math.round(details.reduce(function(s,d){ return s+d.score; },0)/details.length);
+  const goodSet = [];
+  details.forEach(function(d){ d.reasons.forEach(function(r){ if (r.type==='good' && goodSet.indexOf(r.text)===-1) goodSet.push(r.text); }); });
+  return {score:avgScore, reasons:goodSet.slice(0,2), items:items};
+}
+
+/* ============================================================
+   APPLICATION STATE (in-memory — no server, disclosed to user)
+   ============================================================ */
+const LOCATIONS = {
+  'Tamil Nadu': { 'Coimbatore': ['Gandhipuram','RS Puram','Peelamedu','Saibaba Colony'], 'Chennai': ['T Nagar','Anna Nagar','Adyar','Velachery'], 'Madurai': ['Anna Nagar','KK Nagar','Villapuram'] },
+  'Karnataka': { 'Bengaluru Urban': ['Koramangala','Indiranagar','Whitefield'], 'Mysuru': ['Vijayanagar','Saraswathipuram'] },
+  'Kerala': { 'Ernakulam': ['Kakkanad','Edappally'], 'Thiruvananthapuram': ['Kowdiar','Pattom'] }
+};
+const RESTAURANTS = [
+  {id:'R1', name:'FitMeal Kitchen', owner:'Arjun Prakash', email:'restaurant@nalamunavu.in', phone:'+91 90xxxxxx11', address:'Peelamedu, Coimbatore', cuisines:['Continental'], status:'Approved', rating:4.6, hours:'7:00 AM - 10:00 PM', openTime:'07:00', closeTime:'22:00', isOnline:true, offers:'Free delivery above \u20b9299', serviceArea:'5 km radius', fssai:'FSSAI-2291', gst:'33AAAAA0000A1Z5', revenue:0, notifications:[]},
+  {id:'R2', name:'Green Leaf Diet Kitchen', owner:'Meena Iyer', email:'greenleaf@nalamunavu.in', phone:'+91 90xxxxxx22', address:'Peelamedu, Coimbatore', cuisines:['South Indian','North Indian'], status:'Approved', rating:4.5, hours:'6:30 AM - 9:30 PM', openTime:'06:30', closeTime:'21:30', isOnline:true, offers:'10% off on Diabetic Plan', serviceArea:'4 km radius', fssai:'FSSAI-2288', gst:'33BBBBB0000B1Z5', revenue:0, notifications:[]},
+  {id:'R3', name:'Anandha Bhavan Cloud Kitchen', owner:'Suresh Kumar', email:'anandha@nalamunavu.in', phone:'+91 90xxxxxx33', address:'Saibaba Colony, Coimbatore', cuisines:['South Indian','North Indian'], status:'Approved', rating:4.4, hours:'6:00 AM - 10:00 PM', openTime:'06:00', closeTime:'22:00', isOnline:true, offers:'None', serviceArea:'6 km radius', fssai:'FSSAI-2299', gst:'33CCCCC0000C1Z5', revenue:0, notifications:[]},
+  {id:'R4', name:'Meenakshi Hospital Kitchen', owner:'Hospital Nutrition Dept', email:'meenakshi@nalamunavu.in', phone:'+91 90xxxxxx44', address:'RS Puram, Coimbatore', cuisines:['North Indian','South Indian'], status:'Approved', rating:4.7, hours:'24 Hours', openTime:'00:00', closeTime:'23:59', isOnline:true, offers:'None', serviceArea:'3 km radius', fssai:'FSSAI-2210', gst:'33DDDDD0000D1Z5', revenue:0, notifications:[]}
+];
+const DELIVERY_PARTNERS = [
+  {id:'D1', name:'Karthik R.', email:'delivery@nalamunavu.in', phone:'+91 98xxxxxx41', vehicle:'Two Wheeler \u2013 TN37 AB 1234', license:'TN012021001234', status:'Approved', online:false, rating:4.8, earnings:0, deliveries:0},
+  {id:'D2', name:'Suresh M.', email:'suresh.d@nalamunavu.in', phone:'+91 97xxxxxx08', vehicle:'Two Wheeler \u2013 TN37 CD 5678', license:'TN012019005432', status:'Approved', online:false, rating:4.6, earnings:0, deliveries:0},
+  {id:'D3', name:'Vijay S.', email:'vijay.d@nalamunavu.in', phone:'+91 96xxxxxx73', vehicle:'Bicycle', license:'N/A', status:'Approved', online:false, rating:4.5, earnings:0, deliveries:0}
+];
+const PLATFORM_PLANS = [
+  {id:'P1', restaurant:'FitMeal Kitchen', name:'Muscle Gain Weekly', price:1450, type:'Non-Vegetarian', status:'Approved',
+    days:[['Idli + peanut chutney','Grilled chicken quinoa bowl','Paneer stir fry'],['Oats + boiled eggs','Chicken salad bowl','Fish curry + rice'],['Sprouts bowl','Turkey wrap','Egg curry + roti'],['Protein smoothie','Chicken quinoa bowl','Grilled fish'],['Idli + sambar','Chicken breast salad','Paneer bhurji'],['Oats porridge','Egg bowl','Chicken curry'],['Fruit + nuts bowl','Grilled chicken','Fish + veg']]},
+  {id:'P2', restaurant:'Green Leaf Diet Kitchen', name:'Diabetic Care Weekly', price:1900, type:'Vegetarian', status:'Approved',
+    days:[['Millet idli','Millet thali','Vegetable soup'],['Oats upma','Ragi dosa + sambar','Moong dal khichdi'],['Sprouts salad','Millet thali','Palak soup'],['Vegetable poha','Brown rice thali','Vegetable stew'],['Ragi porridge','Millet thali','Dal + roti'],['Oats idli','Vegetable pulao','Vegetable soup'],['Sprouts bowl','Millet thali','Khichdi']]}
+];
+const STATE = {
+  accounts: [
+    { email:'demo@nalamunavu.in', password:'demo123', role:'user',
+      profile:{
+        name:'Arun Kumar', age:29, gender:'Male', height:172, weight:74, occupation:'Software Engineer',
+        persona:'Working Professional', activity:'Lightly Active', lifestyle:'Mostly Sedentary Desk Job',
+        goal:'Weight Loss', conditionsList:[], conditions:'None', allergiesList:['Peanut'], allergies:'Peanut', preferences:'Vegetarian',
+        budget:'\u20b9200/meal', state:'Tamil Nadu', district:'Coimbatore', city:'Peelamedu', area:'Gandhipuram', location:'Gandhipuram, Peelamedu, Coimbatore',
+        subscriptions:[], activeSubscriptionOrders:[], favorites:[1,7], subscriptions_v2:[],
+        prefs:{orderUpdates:true, healthReminders:true, promo:false}, wallet:1500, isPlus:false,
+        consumedToday:{calories:0,protein:0,carbs:0,fat:0,fiber:0}
+      }
+    },
+    { email:'restaurant@nalamunavu.in', password:'demo123', role:'restaurant', restaurantId:'R1', profile:{name:'Arjun Prakash'} },
+    { email:'delivery@nalamunavu.in', password:'demo123', role:'delivery', partnerId:'D1', profile:{name:'Karthik R.'} },
+    { email:'admin@nalamunavu.in', password:'demo123', role:'admin', profile:{name:'Admin User'} },
+    { email:'super@nalamunavu.in', password:'demo123', role:'superadmin', profile:{name:'Super Admin'} }
+  ],
+  currentUser: null,
+  currentBiz: null,
+  cart: [],
+  orders: [],
+  notifications: [],
+  filterTag: 'All',
+  cuisineFilter: 'All Cuisines',
+  foodView: 'meals',
+  filterRestaurant: null,
+  searchQuery: '',
+  appliedCoupon: null,
+  weightLog: [76.2,75.8,75.5,75.1,74.8,74.5,74.2,74.0,73.8,73.6,73.4,73.2,73.0,74.0],
+  waterLog: [1400,1600,1200,1800,1500,1700,900],
+  exerciseLog: [20,35,0,40,25,45,10],
+  nutritionScoreLog: [78,80,76,84,82,86,88],
+  healthScoreLog: [72,74,73,77,79,81,83],
+  restaurants: RESTAURANTS,
+  deliveryPartners: DELIVERY_PARTNERS,
+  plans: PLATFORM_PLANS,
+  auditLog: []
+};
+function pushAudit(msg){ STATE.auditLog.unshift({msg:msg, at:new Date().toLocaleString()}); }
+
+/* ============================================================
+   ROUTING
+   ============================================================ */
+const ROUTE_MAP = { 'dashboard':'dashboard','profile':'profile','health':'health','ai-analysis':'ai-analysis','recommended-foods':'recommended-foods','orders':'orders','subscriptions':'subscriptions','payments':'payments','settings':'settings' };
+const PROTECTED = ['dashboard','profile','health','ai-analysis','recommended-foods','orders','subscriptions','payments','settings'];
+const SIDEBAR_ITEMS = [
+  ['heartbeat','Health','health'],
+  ['clipboard','AI Analysis','ai-analysis'],['salad','Recommended Foods','recommended-foods'],
+  ['cart','Orders','orders'],['rupee','Subscription','subscriptions'],['rupee','Payments','payments'],
+  ['settings','Settings','settings']
+];
+const RENDERERS = {
+  dashboard: renderDashboard, profile: renderProfile, health: renderHealth,
+  'ai-analysis': renderAIAnalysis, 'recommended-foods': renderRecommendedFoods,
+  orders: renderOrders, subscriptions: renderSubscriptions, payments: renderPayments,
+  settings: renderSettings
+};
+
+function route(path){ location.hash = '#/user' + (path ? ('/' + path) : '/dashboard'); }
+window.addEventListener('hashchange', globalRouteDispatch);
+
+function globalRouteDispatch(){
+  const h = location.hash;
+  if (h.indexOf('#/user') === 0) { renderRoute(); }
+  else if (h.indexOf('#/biz/') === 0) { renderBizRoute(); }
+  else { renderPreAuthRoute(); }
+}
+
+function renderRoute(){
+  let h = location.hash.replace('#/user','').replace(/^\//,'');
+  const screen = ROUTE_MAP.hasOwnProperty(h) ? ROUTE_MAP[h] : 'dashboard';
+  if (!STATE.currentUser) { location.hash = '#/login/user'; return; }
+  showScreen(screen);
+}
+
+function showScreen(name){
+  document.querySelectorAll('.uscreen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('u-shell').classList.add('hidden');
+  const bizShell = document.getElementById('biz-shell');
+  if (bizShell) bizShell.classList.add('hidden');
+  closeDropdowns();
+  document.getElementById('u-shell').classList.remove('hidden');
+  renderShellChrome(name);
+  RENDERERS[name]();
+  window.scrollTo(0,0);
+}
+
+/* ---------- Pre-auth routes: landing, portal selection, login, register ---------- */
+const PREAUTH_MAP = { '':'landing', 'portals':'portals' };
+function renderPreAuthRoute(){
+  let h = location.hash.replace('#/','');
+  document.querySelectorAll('.uscreen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('u-shell').classList.add('hidden');
+  const bizShell = document.getElementById('biz-shell');
+  if (bizShell) bizShell.classList.add('hidden');
+  closeDropdowns();
+  if (h.indexOf('login/') === 0) { selectedPortalRole = h.replace('login/',''); document.getElementById('scr-login').classList.remove('hidden'); renderLogin(); return; }
+  if (h.indexOf('register/') === 0) { const r = h.replace('register/',''); document.getElementById('scr-register-'+r).classList.remove('hidden'); RENDER_REGISTER[r](); return; }
+  const screen = PREAUTH_MAP.hasOwnProperty(h) ? PREAUTH_MAP[h] : 'landing';
+  document.getElementById('scr-'+screen).classList.remove('hidden');
+  if (screen==='landing') renderLanding();
+  if (screen==='portals') renderPortals();
+  window.scrollTo(0,0);
+}
+function goPortals(){ location.hash = '#/portals'; }
+function goLogin(role){ location.hash = '#/login/'+role; }
+function goRegister(role){ location.hash = '#/register/'+role; }
+
+/* ---------- Biz routes: restaurant, delivery, admin, superadmin (shared shell) ---------- */
+function bizRoute(role, section){ location.hash = '#/biz/'+role+'/'+section; }
+function renderBizRoute(){
+  let parts = location.hash.replace('#/biz/','').split('/');
+  const role = parts[0], section = parts[1] || ((role==='admin'||role==='superadmin')?'overview':'dashboard');
+  if (!STATE.currentBiz || STATE.currentBiz.role !== role) { location.hash = '#/login/'+role; return; }
+  document.querySelectorAll('.uscreen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('u-shell').classList.add('hidden');
+  document.getElementById('biz-shell').classList.remove('hidden');
+  closeDropdowns();
+  renderBizShell(role, section);
+  window.scrollTo(0,0);
+}
+function bizLogout(){ STATE.currentBiz = null; location.hash = '#/portals'; }
+
+function renderShellChrome(activeName){
+  if (!STATE.currentUser) return;
+  document.getElementById('sidebar-nav').innerHTML = SIDEBAR_ITEMS.map(s =>
+    '<div class="sidebar-item'+(s[2]===activeName?' active':'')+'" onclick="route(\''+s[2]+'\')">'+icon(s[0],16,'currentColor')+'<span>'+s[1]+'</span></div>').join('');
+  document.getElementById('sidebar-logout').innerHTML = icon('logout',16,'currentColor')+'<span>Logout</span>';
+  const titleMap = {dashboard:'Dashboard',profile:'Profile',health:'Health','ai-analysis':'AI Analysis','recommended-foods':'Recommended Foods',orders:'Orders',subscriptions:'Subscriptions',payments:'Payments',history:'Health History',settings:'Settings'};
+  document.getElementById('topbar-title').textContent = titleMap[activeName] || '';
+  document.getElementById('topbar-route').textContent = 'ROUTE: /user/'+activeName;
+  document.getElementById('wallet-chip').innerHTML = icon('rupee',12,'#8A5A16')+' \u20b9'+STATE.currentUser.wallet.toLocaleString('en-IN');
+  document.getElementById('notif-btn').innerHTML = icon('bell',15,'currentColor')+(unreadCount()>0?'<span class="badge-count">'+unreadCount()+'</span>':'');
+  document.getElementById('cart-btn').innerHTML = icon('cart',15,'currentColor')+(STATE.cart.length>0?'<span class="badge-count">'+STATE.cart.reduce((s,i)=>s+i.qty,0)+'</span>':'');
+  document.getElementById('theme-btn').innerHTML = icon('moon',15,'currentColor');
+  document.getElementById('profile-avatar').textContent = STATE.currentUser.name.charAt(0);
+  document.getElementById('sidebar-hamburger').innerHTML = icon('menu',16,'#CFE3DB');
+  renderNotifDropdown();
+  renderProfileDropdown();
+}
+function toggleSidebar(){ document.getElementById('u-sidebar').classList.toggle('collapsed'); }
+function toggleBizSidebar(){ document.getElementById('biz-sidebar').classList.toggle('collapsed'); }
+
+function toggleDropdown(which){
+  const id = which+'-dropdown';
+  const el = document.getElementById(id);
+  const wasHidden = el.classList.contains('hidden');
+  closeDropdowns();
+  if (wasHidden) el.classList.remove('hidden');
+  if (which === 'notif' && wasHidden) { STATE.notifications.forEach(n=>n.read=true); renderShellChrome(currentScreenName()); }
+}
+function closeDropdowns(){
+  ['notif-dropdown','profile-dropdown'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+}
+function currentScreenName(){
+  let h = location.hash.replace('#/user','').replace(/^\//,'');
+  return ROUTE_MAP.hasOwnProperty(h) ? ROUTE_MAP[h] : 'landing';
+}
+function unreadCount(){ return STATE.notifications.filter(n=>!n.read).length; }
+function pushNotification(msg){
+  STATE.notifications.unshift({msg:msg, read:false, at:new Date().toLocaleTimeString()});
+  if (STATE.notifications.length > 20) STATE.notifications.pop();
+}
+function renderNotifDropdown(){
+  const el = document.getElementById('notif-dropdown');
+  if (!el) return;
+  el.innerHTML = STATE.notifications.length === 0
+    ? '<div class="dropdown-item" style="color:var(--ink-soft);">No notifications yet</div>'
+    : STATE.notifications.slice(0,8).map(n => '<div class="dropdown-item"><div style="font-size:11.5px;">'+n.msg+'</div><div class="f-mono" style="font-size:9px;color:var(--ink-soft);">'+n.at+'</div></div>').join('');
+}
+function renderProfileDropdown(){
+  const el = document.getElementById('profile-dropdown');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="dropdown-item" style="cursor:pointer;" onclick="route(\'profile\')">View Profile</div>'+
+    '<div class="dropdown-item" style="cursor:pointer;" onclick="route(\'settings\')">Settings</div>'+
+    '<div class="dropdown-item" style="cursor:pointer;color:var(--red);" onclick="logoutUser()">Logout</div>';
+}
+function toggleTheme(){ document.body.classList.toggle('dark'); }
+
+/* ============================================================
+   LANDING
+   ============================================================ */
+function renderLanding(){
+  document.getElementById('persona-row').innerHTML = ['Students','Working Professionals','Gym Users','Senior Citizens','Pregnant Women','Children','Weight Loss','Weight Gain','Diabetic Users','Cardiac Care','Kidney Care','General Healthy Users']
+    .map(p=>'<span class="persona-chip">'+p+'</span>').join('');
+  document.getElementById('feature-strip').innerHTML = [
+    ['clipboard','AI Health Analysis','Calorie, macro and score targets from your profile'],
+    ['salad','Matched Meals','Every meal shows a nutrition match % for your goal'],
+    ['cart','Order Direct','Order from nearby partner restaurants and kitchens'],
+    ['heartbeat','Post-Discharge Support','Continued dietitian-reviewed nutrition after hospital care']
+  ].map(f=>'<div class="feature-mini"><div class="kpi-icon">'+icon(f[0],17,C.teal)+'</div><div class="feature-mini-title">'+f[1]+'</div><div class="feature-mini-desc">'+f[2]+'</div></div>').join('');
+  document.getElementById('land-icon-restaurant').innerHTML = icon('utensils',20,C.teal);
+  document.getElementById('land-icon-delivery').innerHTML = icon('truck',20,C.teal);
+  document.getElementById('land-icon-all').innerHTML = icon('shield',20,C.teal);
+}
+
+/* ============================================================
+   PORTAL SELECTION + ROLE-AWARE LOGIN
+   ============================================================ */
+let selectedPortalRole = 'user';
+const PORTAL_META = {
+  user: {icon:'user', label:'User Login', desc:'Personalized nutrition, meals and orders'},
+  restaurant: {icon:'utensils', label:'Restaurant Login', desc:'Manage your menu and incoming orders'},
+  delivery: {icon:'truck', label:'Delivery Partner Login', desc:'Accept and deliver orders'},
+  admin: {icon:'shield', label:'Admin Login', desc:'Operational platform management'},
+  superadmin: {icon:'globe', label:'Super Admin Login', desc:'Full platform control and approvals'}
+};
+function renderPortals(){
+  document.getElementById('portal-grid').innerHTML = Object.keys(PORTAL_META).map(function(key){
+    const m = PORTAL_META[key];
+    return '<div class="portal-card" onclick="goLogin(\''+key+'\')"><div class="portal-icon-wrap">'+icon(m.icon,20,C.teal)+'</div>'+
+      '<div class="portal-label">'+m.label+'</div><div class="portal-desc">'+m.desc+'</div></div>';
+  }).join('');
+}
+function renderLogin(){
+  const m = PORTAL_META[selectedPortalRole];
+  document.getElementById('login-eyebrow').textContent = '/LOGIN/'+selectedPortalRole.toUpperCase();
+  document.getElementById('login-title').textContent = 'Log in \u2014 '+m.label.replace(' Login','');
+  const demoCreds = { user:['demo@nalamunavu.in','demo123'], restaurant:['restaurant@nalamunavu.in','demo123'], delivery:['delivery@nalamunavu.in','demo123'], admin:['admin@nalamunavu.in','demo123'], superadmin:['super@nalamunavu.in','demo123'] }[selectedPortalRole];
+  const canRegister = selectedPortalRole==='user' || selectedPortalRole==='restaurant' || selectedPortalRole==='delivery';
+  document.getElementById('login-form-card').innerHTML =
+    '<div class="form-field"><label>Email</label><input id="li-email" value="'+demoCreds[0]+'" /></div>'+
+    '<div class="form-field"><label>Password</label><input id="li-pass" type="password" value="'+demoCreds[1]+'" /></div>'+
+    '<div class="inline-error hidden" id="li-error"></div>'+
+    '<button class="btn btn-coral" style="width:100%;justify-content:center;" onclick="attemptLogin()">Log In</button>'+
+    (canRegister ? '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:14px;text-align:center;">Demo account pre-filled \u2014 or <a href="javascript:void(0)" onclick="goRegister(\''+selectedPortalRole+'\')" style="color:var(--teal);font-weight:700;">create a new account</a></div>' :
+    '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:14px;text-align:center;">Admin accounts are provisioned internally, not self-registered.</div>');
+}
+function attemptLogin(){
+  const email = document.getElementById('li-email').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  const acc = STATE.accounts.find(a => a.email.toLowerCase() === email.toLowerCase() && a.password === pass);
+  const err = document.getElementById('li-error');
+  if (!acc) { err.textContent = 'No account matches that email and password.'; err.classList.remove('hidden'); return; }
+  if (acc.role !== selectedPortalRole) { const art=function(r){return r==='admin'?'an':'a';}; err.textContent = 'This account is registered as '+art(acc.role)+' '+acc.role+' account, not '+art(selectedPortalRole)+' '+selectedPortalRole+' account.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  if (selectedPortalRole === 'user') {
+    STATE.currentUser = Object.assign({email:acc.email}, acc.profile);
+    acc.profile = STATE.currentUser;
+    pushNotification('Welcome back, '+STATE.currentUser.name+'.');
+    route('dashboard');
+  } else {
+    STATE.currentBiz = { role:selectedPortalRole, email:acc.email, restaurantId:acc.restaurantId||null, partnerId:acc.partnerId||null, name:acc.profile.name };
+    pushAudit(acc.profile.name+' ('+selectedPortalRole+') logged in.');
+    const defaultSection = (selectedPortalRole==='admin'||selectedPortalRole==='superadmin') ? 'overview' : 'dashboard';
+    bizRoute(selectedPortalRole, defaultSection);
+  }
+}
+function logoutUser(){
+  STATE.currentUser = null;
+  STATE.cart = [];
+  goPortals();
+}
+
+/* ============================================================
+   REGISTER — USER (full validation, multi-select, cascading location)
+   ============================================================ */
+const ALLERGEN_OPTIONS = ['Milk/Dairy','Egg','Peanut','Tree Nuts','Soy','Wheat/Gluten','Fish','Shellfish','Sesame','Mustard','Other'];
+const CONDITION_OPTIONS = ['Diabetes','Hypertension','Heart Disease','Kidney Disease','Obesity','Thyroid','PCOS','Pregnancy','None','Other'];
+const RENDER_REGISTER = { user: renderRegisterUser, restaurant: renderRegisterRestaurant, delivery: renderRegisterDelivery };
+function checkboxGrid(prefix, options){
+  return '<div class="checkbox-grid">'+options.map(function(o,i){
+    return '<label class="checkbox-item"><input type="checkbox" class="'+prefix+'-chk" value="'+o+'" onchange="'+(prefix==='al'?'toggleOtherField(\'al\')':'toggleOtherField(\'cond\')')+'" /> '+o+'</label>';
+  }).join('')+'</div>';
+}
+function toggleOtherField(prefix){
+  const otherChecked = document.querySelector('.'+prefix+'-chk[value="Other"]').checked;
+  document.getElementById(prefix+'-other-field').classList.toggle('hidden', !otherChecked);
+}
+function getChecked(prefix){
+  return Array.prototype.slice.call(document.querySelectorAll('.'+prefix+'-chk:checked')).map(function(el){ return el.value; });
+}
+function renderRegisterUser(){
+  document.getElementById('register-form-card').innerHTML =
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>Full Name</label><input id="rg-name" placeholder="Full name" /></div>'+
+      '<div class="form-field"><label>Email</label><input id="rg-email" placeholder="you@example.com" /></div>'+
+      '<div class="form-field"><label>Create Password</label><input id="rg-pass" type="password" placeholder="Create a password" /></div>'+
+      '<div class="form-field"><label>Confirm Password</label><input id="rg-pass2" type="password" placeholder="Re-enter password" /></div>'+
+      '<div class="form-field"><label>Who Are You</label><select id="rg-persona">'+
+        ['Student','Working Professional','Gym User','Senior Citizen','Pregnant Woman','Child','Athlete','Weight Loss User','Weight Gain User','General Health User'].map(o=>'<option>'+o+'</option>').join('')+
+      '</select></div>'+
+      '<div class="form-field"><label>Age</label><input id="rg-age" type="number" value="28" /></div>'+
+      '<div class="form-field"><label>Gender</label><select id="rg-gender"><option>Male</option><option>Female</option><option>Other</option></select></div>'+
+      '<div class="form-field"><label>Height (cm)</label><input id="rg-height" type="number" value="170" oninput="liveBMI()" /></div>'+
+      '<div class="form-field"><label>Weight (kg)</label><input id="rg-weight" type="number" value="68" oninput="liveBMI()" /></div>'+
+      '<div class="form-field"><label>Activity / Lifestyle</label><select id="rg-activity"><option>Sedentary</option><option selected>Lightly Active</option><option>Active</option><option>Very Active</option></select></div>'+
+      '<div class="form-field"><label>Health Goal</label><select id="rg-goal">'+
+        ['Weight Loss','Weight Gain','Bulking','Fat Loss','Muscle Gain','Healthy Living','Diabetes Control','Heart Care','Kidney Care','Pregnancy','Senior Care','Student Nutrition'].map(o=>'<option>'+o+'</option>').join('')+
+      '</select></div>'+
+      '<div class="form-field"><label>Food Preference</label><select id="rg-preference"><option>Vegetarian</option><option>Non-Vegetarian</option><option>Both</option></select></div>'+
+      '<div class="form-field"><label>Budget (\u20b9 per meal)</label><input id="rg-budget" type="number" placeholder="e.g. 200" /></div>'+
+    '</div>'+
+    '<div class="form-field"><label>Medical Conditions (select all that apply)</label>'+checkboxGrid('cond', CONDITION_OPTIONS)+
+      '<div class="hidden" id="cond-other-field"><input id="rg-cond-other" placeholder="Describe other condition(s)" /></div></div>'+
+    '<div class="form-field"><label>Food Allergens (select all that apply)</label>'+checkboxGrid('al', ALLERGEN_OPTIONS)+
+      '<div class="hidden" id="al-other-field"><input id="rg-al-other" placeholder="Describe other allergen(s)" /></div></div>'+
+    '<div class="panel-title" style="margin-top:6px;">Delivery Location</div>'+
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>State</label><select id="rg-state" onchange="updateDistricts()">'+Object.keys(LOCATIONS).map(s=>'<option>'+s+'</option>').join('')+'</select></div>'+
+      '<div class="form-field"><label>District</label><select id="rg-district" onchange="updateCities()"></select></div>'+
+      '<div class="form-field"><label>City</label><select id="rg-city"></select></div>'+
+      '<div class="form-field"><label>Area</label><input id="rg-area" placeholder="Street / locality" /></div>'+
+    '</div>'+
+    '<div class="row between" style="margin-bottom:14px;"><span style="font-size:12.5px;color:var(--ink-soft);">Your BMI (auto-calculated)</span><span class="bmi-badge" id="rg-bmi">BMI 23.5</span></div>'+
+    '<div class="inline-error hidden" id="rg-error"></div>'+
+    '<button class="btn btn-coral" style="width:100%;justify-content:center;" onclick="submitRegister()">Create Account &amp; Run AI Analysis</button>';
+  liveBMI();
+  updateDistricts();
+}
+function updateDistricts(){
+  const state = document.getElementById('rg-state').value;
+  const districts = Object.keys(LOCATIONS[state]);
+  document.getElementById('rg-district').innerHTML = districts.map(d=>'<option>'+d+'</option>').join('');
+  updateCities();
+}
+function updateCities(){
+  const state = document.getElementById('rg-state').value;
+  const district = document.getElementById('rg-district').value;
+  const cities = LOCATIONS[state][district] || [];
+  document.getElementById('rg-city').innerHTML = cities.map(c=>'<option>'+c+'</option>').join('');
+}
+function liveBMI(){
+  const h = parseFloat(document.getElementById('rg-height').value) || 170;
+  const w = parseFloat(document.getElementById('rg-weight').value) || 68;
+  const bmi = (w/((h/100)*(h/100))).toFixed(1);
+  document.getElementById('rg-bmi').textContent = 'BMI '+bmi;
+}
+function submitRegister(){
+  const email = document.getElementById('rg-email').value.trim();
+  const pass = document.getElementById('rg-pass').value;
+  const pass2 = document.getElementById('rg-pass2').value;
+  const name = document.getElementById('rg-name').value.trim();
+  const budget = document.getElementById('rg-budget').value;
+  const err = document.getElementById('rg-error');
+  if (!name || !email || !pass || !pass2 || !budget) { err.textContent = 'Please fill in all required fields, including budget.'; err.classList.remove('hidden'); return; }
+  if (pass !== pass2) { err.textContent = 'Password and Confirm Password do not match.'; err.classList.remove('hidden'); return; }
+  if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.remove('hidden'); return; }
+  if (STATE.accounts.some(a=>a.email.toLowerCase()===email.toLowerCase())) { err.textContent = 'An account with that email already exists \u2014 try logging in.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  const height = parseFloat(document.getElementById('rg-height').value) || 170;
+  const weight = parseFloat(document.getElementById('rg-weight').value) || 68;
+  const conditionsList = getChecked('cond');
+  const allergiesList = getChecked('al');
+  const profile = {
+    name:name, age:parseFloat(document.getElementById('rg-age').value)||25,
+    gender:document.getElementById('rg-gender').value, height:height, weight:weight,
+    persona:document.getElementById('rg-persona').value, activity:document.getElementById('rg-activity').value,
+    lifestyle:document.getElementById('rg-persona').value, occupation:document.getElementById('rg-persona').value,
+    goal:document.getElementById('rg-goal').value,
+    conditionsList:conditionsList, conditionsOther:document.getElementById('rg-cond-other').value||'',
+    conditions: conditionsList.length ? conditionsList.join(', ') : 'None',
+    allergiesList:allergiesList, allergiesOther:document.getElementById('rg-al-other').value||'',
+    allergies: allergiesList.length ? allergiesList.join(', ') : 'None',
+    preferences:document.getElementById('rg-preference').value,
+    budget:'\u20b9'+budget+'/meal',
+    state:document.getElementById('rg-state').value, district:document.getElementById('rg-district').value,
+    city:document.getElementById('rg-city').value, area:document.getElementById('rg-area').value||'Not specified',
+    location:(document.getElementById('rg-area').value||'')+', '+document.getElementById('rg-city').value+', '+document.getElementById('rg-district').value,
+    subscriptions:[], prefs:{orderUpdates:true, healthReminders:true, promo:true}, wallet:1000, isPlus:false, favorites:[],
+    consumedToday:{calories:0,protein:0,carbs:0,fat:0,fiber:0}
+  };
+  STATE.accounts.push({email:email, password:pass, role:'user', profile:profile});
+  STATE.currentUser = Object.assign({email:email}, profile);
+  STATE.weightLog = [weight+1.5, weight+1.2, weight+0.8, weight+0.5, weight+0.3, weight+0.1, weight];
+  STATE.waterLog = [1200,1400,1300,1500,1200,1600,1400];
+  STATE.exerciseLog = [15,20,0,25,10,30,15];
+  const ai = computeAI(profile);
+  STATE.nutritionScoreLog = [ai.nutritionScore-8,ai.nutritionScore-5,ai.nutritionScore-6,ai.nutritionScore-3,ai.nutritionScore-2,ai.nutritionScore-1,ai.nutritionScore];
+  STATE.healthScoreLog = [ai.healthScore-6,ai.healthScore-5,ai.healthScore-4,ai.healthScore-2,ai.healthScore-2,ai.healthScore-1,ai.healthScore];
+  pushNotification('Account created. Your AI nutrition analysis is ready.');
+  route('dashboard');
+}
+
+/* ============================================================
+   REGISTER — RESTAURANT
+   ============================================================ */
+function renderRegisterRestaurant(){
+  document.getElementById('register-restaurant-card').innerHTML =
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>Restaurant / Kitchen Name</label><input id="rr-name" placeholder="e.g. Green Bowl Kitchen" /></div>'+
+      '<div class="form-field"><label>Owner Name</label><input id="rr-owner" placeholder="Full name" /></div>'+
+      '<div class="form-field"><label>Email</label><input id="rr-email" placeholder="owner@example.com" /></div>'+
+      '<div class="form-field"><label>Password</label><input id="rr-pass" type="password" placeholder="Create a password" /></div>'+
+      '<div class="form-field"><label>Phone</label><input id="rr-phone" placeholder="+91 90xxxxxxx0" /></div>'+
+      '<div class="form-field"><label>FSSAI License No.</label><input id="rr-fssai" placeholder="FSSAI-XXXX" /></div>'+
+      '<div class="form-field"><label>GST Number</label><input id="rr-gst" placeholder="GSTIN" /></div>'+
+      '<div class="form-field"><label>Cuisine Type</label><input id="rr-cuisine" placeholder="e.g. South Indian, Continental" /></div>'+
+      '<div class="form-field"><label>Operating Hours</label><input id="rr-hours" placeholder="e.g. 7:00 AM - 10:00 PM" /></div>'+
+      '<div class="form-field"><label>Service Area</label><input id="rr-area" placeholder="e.g. 5 km radius" /></div>'+
+    '</div>'+
+    '<div class="form-field"><label>Address</label><input id="rr-address" placeholder="Full address" /></div>'+
+    '<div class="inline-error hidden" id="rr-error"></div>'+
+    '<button class="btn btn-coral" style="width:100%;justify-content:center;" onclick="submitRegisterRestaurant()">Submit for Verification</button>';
+}
+function submitRegisterRestaurant(){
+  const name = document.getElementById('rr-name').value.trim();
+  const email = document.getElementById('rr-email').value.trim();
+  const pass = document.getElementById('rr-pass').value;
+  const err = document.getElementById('rr-error');
+  if (!name || !email || !pass) { err.textContent = 'Restaurant name, email and password are required.'; err.classList.remove('hidden'); return; }
+  if (STATE.accounts.some(a=>a.email.toLowerCase()===email.toLowerCase())) { err.textContent = 'An account with that email already exists.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  const id = 'R'+(RESTAURANTS.length+1);
+  const rec = { id:id, name:name, owner:document.getElementById('rr-owner').value||'Not specified', email:email,
+    phone:document.getElementById('rr-phone').value||'Not specified', address:document.getElementById('rr-address').value||'Not specified',
+    cuisines:(document.getElementById('rr-cuisine').value||'General').split(',').map(function(s){return s.trim();}),
+    status:'Pending', rating:0, hours:document.getElementById('rr-hours').value||'Not specified',
+    openTime:'09:00', closeTime:'21:00', isOnline:true, offers:'None',
+    serviceArea:document.getElementById('rr-area').value||'Not specified', fssai:document.getElementById('rr-fssai').value||'Not provided',
+    gst:document.getElementById('rr-gst').value||'Not provided', revenue:0, notifications:[] };
+  RESTAURANTS.push(rec);
+  STATE.accounts.push({email:email, password:pass, role:'restaurant', restaurantId:id, profile:{name:document.getElementById('rr-owner').value||name}});
+  pushAudit('New restaurant registered: '+name+' (Verification Pending).');
+  selectedPortalRole = 'restaurant';
+  alert('Registration submitted! Your restaurant is now Verification Pending. Log in to track its status.');
+  goLogin('restaurant');
+}
+
+/* ============================================================
+   REGISTER — DELIVERY PARTNER
+   ============================================================ */
+function renderRegisterDelivery(){
+  document.getElementById('register-delivery-card').innerHTML =
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>Full Name</label><input id="rd-name" placeholder="Full name" /></div>'+
+      '<div class="form-field"><label>Email</label><input id="rd-email" placeholder="you@example.com" /></div>'+
+      '<div class="form-field"><label>Password</label><input id="rd-pass" type="password" placeholder="Create a password" /></div>'+
+      '<div class="form-field"><label>Phone</label><input id="rd-phone" placeholder="+91 9xxxxxxxx0" /></div>'+
+      '<div class="form-field"><label>Vehicle Details</label><input id="rd-vehicle" placeholder="e.g. Two Wheeler - TN37 XY 0000" /></div>'+
+      '<div class="form-field"><label>Driving Licence No.</label><input id="rd-license" placeholder="License number" /></div>'+
+      '<div class="form-field"><label>Vehicle Registration No.</label><input id="rd-regno" placeholder="e.g. TN37AB1234" oninput="this.value=this.value.toUpperCase();" /><div class="f-mono" style="font-size:9.5px;color:var(--ink-soft);margin-top:3px;">Format: state code + district code + series + number (any valid RTO format accepted)</div></div>'+
+      '<div class="form-field"><label>Service Area</label><input id="rd-area" placeholder="e.g. Coimbatore - 5km radius" /></div>'+
+    '</div>'+
+    '<div class="inline-error hidden" id="rd-error"></div>'+
+    '<button class="btn btn-coral" style="width:100%;justify-content:center;" onclick="submitRegisterDelivery()">Submit for Verification</button>';
+}
+function submitRegisterDelivery(){
+  const name = document.getElementById('rd-name').value.trim();
+  const email = document.getElementById('rd-email').value.trim();
+  const pass = document.getElementById('rd-pass').value;
+  const err = document.getElementById('rd-error');
+  if (!name || !email || !pass) { err.textContent = 'Name, email and password are required.'; err.classList.remove('hidden'); return; }
+  if (STATE.accounts.some(a=>a.email.toLowerCase()===email.toLowerCase())) { err.textContent = 'An account with that email already exists.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  const id = 'D'+(DELIVERY_PARTNERS.length+1);
+  const rec = { id:id, name:name, email:email, phone:document.getElementById('rd-phone').value||'Not specified',
+    vehicle:document.getElementById('rd-vehicle').value||'Not specified', license:document.getElementById('rd-license').value||'Not provided',
+    regNo:document.getElementById('rd-regno').value||'Not provided', serviceArea:document.getElementById('rd-area').value||'Not specified',
+    status:'Pending', online:false, rating:0, earnings:0, deliveries:0 };
+  DELIVERY_PARTNERS.push(rec);
+  STATE.accounts.push({email:email, password:pass, role:'delivery', partnerId:id, profile:{name:name}});
+  pushAudit('New delivery partner registered: '+name+' (Verification Pending).');
+  alert('Registration submitted! Your account is now Verification Pending. Log in to track its status.');
+  goLogin('delivery');
+}
+
+/* ============================================================
+   AI ANALYSIS ENGINE (Mifflin-St Jeor + simple composite scores)
+   ============================================================ */
+function computeAI(profile){
+  const bmi = profile.weight/((profile.height/100)*(profile.height/100));
+  let bmr = profile.gender==='Female' ? (10*profile.weight+6.25*profile.height-5*profile.age-161) : (10*profile.weight+6.25*profile.height-5*profile.age+5);
+  const activityMult = {'Sedentary':1.2,'Lightly Active':1.375,'Active':1.55,'Very Active':1.725};
+  let calories = bmr*(activityMult[profile.activity]||1.375);
+  if (profile.goal==='Weight Loss'||profile.goal==='Fat Loss') calories -= 400;
+  if (profile.goal==='Weight Gain'||profile.goal==='Bulking'||profile.goal==='Muscle Gain') calories += 400;
+  calories = Math.round(calories);
+  const protein = Math.round(profile.weight*(profile.goal.indexOf('Muscle')!==-1||profile.goal==='Bulking'?1.8:1.2));
+  const carbs = Math.round((calories*0.45)/4);
+  const fat = Math.round((calories*0.25)/9);
+  const water = (profile.weight*0.033).toFixed(1);
+  const fiber = Math.round(calories/1000*14);
+  const healthScore = Math.max(40, Math.min(98, Math.round(100 - Math.abs(bmi-22)*3.2)));
+  const nutritionScore = Math.max(40, Math.min(98, Math.round(70 + (profile.activity==='Active'||profile.activity==='Very Active'?10:0) + (profile.conditions==='None'?8:0))));
+  const avoidMap = {'Diabetes Control':'refined sugar, white rice, sweetened beverages','Heart Care':'added salt, fried foods, red meat','Kidney Care':'high-potassium foods, excess protein, processed salt','Pregnancy':'raw seafood, unpasteurised dairy, excess caffeine','Senior Care':'hard-to-chew foods, excess sodium'};
+  const avoid = avoidMap[profile.goal] || 'sugary drinks, deep-fried snacks, refined carbs';
+  return {
+    bmi:bmi.toFixed(1), calories:calories, protein:protein, carbs:carbs, fat:fat, fiber:fiber, water:water,
+    healthScore:healthScore, nutritionScore:nutritionScore, avoidFoods:avoid,
+    mealSchedule:['7:30 AM Breakfast','1:00 PM Lunch','4:30 PM Snack','8:00 PM Dinner'],
+    recommendedFoods:'Oats, leafy greens, lentils, seasonal fruit, nuts, curd, whole grains',
+    weeklyGoal:goalWeekly(profile.goal), monthlyGoal:goalMonthly(profile.goal)
+  };
+}
+function goalWeekly(goal){
+  const m = {'Weight Loss':'Lose 0.4\u20130.6 kg this week through a calorie deficit','Weight Gain':'Gain 0.3\u20130.5 kg this week via calorie surplus','Muscle Gain':'Hit protein target 6/7 days','Diabetes Control':'Keep added sugar under 15g/day all week','Heart Care':'Keep sodium under 2000mg/day all week'};
+  return m[goal] || 'Log meals and water on at least 5 of 7 days';
+}
+function goalMonthly(goal){
+  const m = {'Weight Loss':'Lose 1.5\u20132 kg this month, sustainably','Weight Gain':'Gain 1.5\u20132 kg this month with strength training','Muscle Gain':'Increase strength training load by 10%'};
+  return m[goal] || 'Improve average nutrition score by 8 points';
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const u = STATE.currentUser;
+  const ai = computeAI(u);
+  const today = MEALS.filter(m=>m.tags.indexOf(u.goal)!==-1).slice(0,2);
+  const upcoming = MEALS.filter(m=>m.tags.indexOf(u.goal)===-1).slice(0,2);
+  const restaurants = [...new Set(MEALS.map(m=>m.restaurant))];
+  const pastMealIds = [...new Set(STATE.orders.flatMap(o=>o.items.map(it=>it.mealId)))].slice(0,3);
+  document.getElementById('u-content').innerHTML =
+    '<div class="deliver-bar" id="deliver-bar"></div>'+
+    '<div class="panel">'+
+      '<div class="row between" style="margin-bottom:10px;"><div class="panel-title" style="margin-bottom:0;">Today\u2019s scores &amp; AI recommendation</div><span class="f-mono" style="font-size:10px;color:var(--ink-soft);">Goal: '+u.goal+'</span></div>'+
+      '<div class="row" style="justify-content:space-around;margin-bottom:14px;">'+
+        thaliRing(ai.healthScore,80,C.teal,'Health Score')+thaliRing(ai.nutritionScore,80,C.gold,'Nutrition Score')+
+      '</div>'+
+      '<div style="font-size:12.5px;color:var(--ink-soft);">AI suggests <b style="color:var(--ink);">'+ai.calories+' kcal</b>, <b style="color:var(--ink);">'+ai.protein+'g protein</b> and <b style="color:var(--ink);">'+ai.water+'L water</b> today based on your profile and goal.</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Today\u2019s nutrition progress</div>'+
+      progressBar('Calories', u.consumedToday.calories, ai.calories, 'kcal', C.teal)+
+      progressBar('Protein', u.consumedToday.protein, ai.protein, 'g', C.gold)+
+      progressBar('Carbohydrates', u.consumedToday.carbs, ai.carbs, 'g', C.coral)+
+      progressBar('Fat', u.consumedToday.fat, ai.fat, 'g', C.info)+
+      progressBar('Fiber', u.consumedToday.fiber, (ai.fiber||30), 'g', C.teal)+
+      '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:6px;">Updates automatically when your orders are delivered.</div>'+
+    '</div>'+
+    (pastMealIds.length>0 ? '<div class="panel"><div class="panel-title">Order it again</div><div class="row wrap gap8">'+
+      pastMealIds.map(id=>{ const m=MEALS.find(x=>x.id===id); if(!m) return ''; return '<div class="reorder-chip"><span>'+m.name+'</span><button class="btn btn-ghost btn-sm" onclick="addToCart('+m.id+'); route(\'orders\');">'+icon('cart',11,'currentColor')+' \u20b9'+m.price+'</button></div>'; }).join('')+
+    '</div></div>' : '')+
+    '<div class="panel"><div class="panel-title">Today\u2019s meals</div>'+
+      today.map(m=>mealRow(m)).join('')+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Upcoming meal suggestions</div>'+
+      upcoming.map(m=>mealRow(m)).join('')+
+    '</div>'+
+    '<div class="kpi-row">'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Water tracker</div>'+
+        '<div style="font-size:20px;font-weight:700;font-family:\'Baloo 2\',sans-serif;">'+lastLog('waterLog')+' ml</div>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-bottom:10px;">of 2000 ml target</div>'+
+        '<button class="btn btn-ghost btn-sm" onclick="logWater(250)">'+icon('droplet',12,'currentColor')+' +250ml</button></div>'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Weight tracker</div>'+
+        '<div style="font-size:20px;font-weight:700;font-family:\'Baloo 2\',sans-serif;">'+lastLog('weightLog')+' kg</div>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-bottom:10px;">latest logged weight</div>'+
+        '<input id="dash-weight-input" type="number" placeholder="kg" style="width:60px;padding:6px;border:1px solid var(--line);border-radius:8px;font-size:11px;" /> <button class="btn btn-ghost btn-sm" onclick="logWeightFromDash()">Log</button></div>'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Exercise tracker</div>'+
+        '<div style="font-size:20px;font-weight:700;font-family:\'Baloo 2\',sans-serif;">'+lastLog('exerciseLog')+' min</div>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-bottom:10px;">logged today</div>'+
+        '<button class="btn btn-ghost btn-sm" onclick="logExercise(15)">'+icon('trending',12,'currentColor')+' +15min</button></div>'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Subscriptions</div>'+
+        '<div style="font-size:20px;font-weight:700;font-family:\'Baloo 2\',sans-serif;">'+u.subscriptions.length+'</div>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-bottom:10px;">active plan(s)</div>'+
+        '<button class="btn btn-ghost btn-sm" onclick="route(\'subscriptions\')">Manage</button></div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Health trends (last 7 entries)</div>'+
+      '<div class="bars">'+barsScore(STATE.healthScoreLog, C.teal)+'</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">AI-recommended restaurants for you</div>'+
+      '<div class="row wrap gap8">'+restaurants.map(function(r){ const d=restaurantMatchDetail(r); return '<button class="reorder-chip" style="cursor:pointer;border:none;" onclick="goToRestaurantMenu(\''+r+'\')"><span>'+r+'</span><span class="status-chip" style="background:var(--gold-tint);color:#8A5A16;">'+d.score+'%</span></button>'; }).join('')+'</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Recent orders</div>'+
+      (STATE.orders.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders yet. <a href="javascript:void(0)" onclick="route(\'recommended-foods\')" style="color:var(--teal);font-weight:700;">Browse meals</a></div>' :
+      STATE.orders.slice(0,3).map(o=>'<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-size:12px;">Order #'+o.id+' \u2014 '+o.items.length+' item(s)</span><span class="status-chip">'+o.status+'</span></div>').join(''))+
+    '</div>';
+  renderDeliverBar();
+}
+function renderDeliverBar(){
+  const el = document.getElementById('deliver-bar');
+  if (!el) return;
+  el.innerHTML = '<div class="row gap8">'+icon('truck',15,C.coral)+'<span>Deliver to: <b>'+STATE.currentUser.location+'</b></span></div>'+
+    '<button class="btn btn-ghost btn-sm" onclick="editDeliverLocation()">Change</button>';
+}
+function editDeliverLocation(){
+  const el = document.getElementById('deliver-bar');
+  if (!el) return;
+  el.innerHTML = '<input id="deliver-loc-input" value="'+STATE.currentUser.location+'" style="flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;" />'+
+    '<button class="btn btn-primary btn-sm" onclick="saveDeliverLocation()">Save</button>';
+  document.getElementById('deliver-loc-input').focus();
+}
+function saveDeliverLocation(){
+  const v = document.getElementById('deliver-loc-input').value.trim();
+  if (v) { STATE.currentUser.location = v; pushNotification('Delivery location updated to '+v+'.'); }
+  renderDeliverBar();
+}
+function mealRow(m){
+  const match = mealMatch(m);
+  return '<div class="row between" style="padding:9px 0;border-bottom:1px solid var(--line);">'+
+    '<div><div style="font-size:12.5px;font-weight:700;">'+m.name+'</div><div class="f-mono" style="font-size:9.5px;color:var(--ink-soft);">'+m.restaurant+' \u00b7 '+m.calories+' kcal</div></div>'+
+    '<span class="status-chip">'+match+'% match</span></div>';
+}
+function lastLog(key){ const a = STATE[key]; return a[a.length-1]; }
+function logWater(ml){
+  STATE.waterLog[STATE.waterLog.length-1] += ml;
+  if (STATE.currentUser.prefs.healthReminders) pushNotification('Logged +'+ml+'ml water.');
+  renderDashboard(); renderShellChrome('dashboard');
+}
+function logWeightFromDash(){
+  const v = parseFloat(document.getElementById('dash-weight-input').value);
+  if (!v) return;
+  STATE.weightLog.push(v);
+  STATE.currentUser.weight = v;
+  if (STATE.currentUser.prefs.healthReminders) pushNotification('Logged today\u2019s weight: '+v+'kg.');
+  renderDashboard(); renderShellChrome('dashboard');
+}
+function logExercise(min){
+  STATE.exerciseLog[STATE.exerciseLog.length-1] += min;
+  if (STATE.currentUser.prefs.healthReminders) pushNotification('Logged +'+min+' min exercise.');
+  renderDashboard(); renderShellChrome('dashboard');
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function renderProfile(){
+  const u = STATE.currentUser;
+  document.getElementById('u-content').innerHTML =
+    '<div class="panel" style="max-width:640px;">'+
+    '<div class="panel-title">Edit profile</div>'+
+    '<div class="form-grid2">'+
+      field('pf-name','Name',u.name)+field('pf-age','Age',u.age,'number')+
+      field('pf-height','Height (cm)',u.height,'number')+field('pf-weight','Weight (kg)',u.weight,'number')+
+      field('pf-occupation','Occupation',u.occupation)+field('pf-lifestyle','Lifestyle',u.lifestyle)+
+      field('pf-conditions','Medical Conditions',u.conditions)+field('pf-allergies','Food Allergies',u.allergies)+
+      field('pf-preferences','Food Preferences',u.preferences)+field('pf-budget','Budget',u.budget)+
+    '</div>'+
+    '<div class="form-field"><label>Preferred Delivery Location</label><input id="pf-location" value="'+u.location+'" /></div>'+
+    '<div class="row between" style="margin-bottom:14px;"><span style="font-size:12.5px;color:var(--ink-soft);">Current BMI</span><span class="bmi-badge">BMI '+computeAI(u).bmi+'</span></div>'+
+    '<button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>'+
+    '</div>';
+}
+function field(id,label,val,type){
+  return '<div class="form-field"><label>'+label+'</label><input id="'+id+'" type="'+(type||'text')+'" value="'+val+'" /></div>';
+}
+function saveProfile(){
+  const u = STATE.currentUser;
+  u.name = document.getElementById('pf-name').value;
+  u.age = parseFloat(document.getElementById('pf-age').value)||u.age;
+  u.height = parseFloat(document.getElementById('pf-height').value)||u.height;
+  u.weight = parseFloat(document.getElementById('pf-weight').value)||u.weight;
+  u.occupation = document.getElementById('pf-occupation').value;
+  u.lifestyle = document.getElementById('pf-lifestyle').value;
+  u.conditions = document.getElementById('pf-conditions').value;
+  u.allergies = document.getElementById('pf-allergies').value;
+  u.preferences = document.getElementById('pf-preferences').value;
+  u.budget = document.getElementById('pf-budget').value;
+  u.location = document.getElementById('pf-location').value;
+  pushNotification('Profile updated \u2014 your AI meal and restaurant recommendations have been refreshed.');
+  renderShellChrome('profile');
+  renderProfile();
+}
+
+/* ============================================================
+   HEALTH
+   ============================================================ */
+function renderHealth(){
+  const u = STATE.currentUser;
+  const ai = computeAI(u);
+  document.getElementById('u-content').innerHTML =
+    '<div class="kpi-row">'+
+      [['heartbeat','BMI',ai.bmi],['user','Weight',lastLog('weightLog')+' kg'],['droplet','Water Today',lastLog('waterLog')+' ml'],['trending','Exercise Today',lastLog('exerciseLog')+' min']]
+        .map(k=>'<div class="kpi-card"><div class="kpi-icon">'+icon(k[0],16,C.teal)+'</div><div class="kpi-value f-display">'+k[2]+'</div><div class="kpi-label">'+k[1].toUpperCase()+'</div></div>').join('')+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Log new readings</div>'+
+      '<div class="row gap8 wrap">'+
+        '<input id="hl-weight" type="number" placeholder="Weight (kg)" style="width:130px;padding:9px;border:1px solid var(--line);border-radius:9px;" />'+
+        '<button class="btn btn-ghost btn-sm" onclick="logWeightFromHealth()">Log Weight</button>'+
+        '<input id="hl-water" type="number" placeholder="Water (ml)" style="width:130px;padding:9px;border:1px solid var(--line);border-radius:9px;" />'+
+        '<button class="btn btn-ghost btn-sm" onclick="logWaterFromHealth()">Log Water</button>'+
+        '<input id="hl-exercise" type="number" placeholder="Exercise (min)" style="width:130px;padding:9px;border:1px solid var(--line);border-radius:9px;" />'+
+        '<button class="btn btn-ghost btn-sm" onclick="logExerciseFromHealth()">Log Exercise</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Weight trend</div><div class="bars">'+barsRelative(STATE.weightLog.slice(-7), C.coral)+'</div></div>'+
+    '<div class="panel"><div class="panel-title">Water intake trend (of 2000ml target)</div><div class="bars">'+barsAgainstTarget(STATE.waterLog, 2000, C.teal)+'</div></div>'+
+    '<div class="panel"><div class="row between"><div class="panel-title" style="margin-bottom:0;">Nutrition &amp; health score history</div>'+
+      '<button class="btn btn-ghost btn-sm no-print" onclick="window.print()">'+icon('download',12,'currentColor')+' Export Report</button></div>'+
+      '<div class="row wrap gap8" style="margin:10px 0 14px;">'+['1 Month','2 Months','3 Months','6 Months','1 Year'].map(function(t,i){ return '<button class="filter-chip'+(i===0?' active':'')+'" onclick="this.parentNode.querySelectorAll(\'.filter-chip\').forEach(function(b){b.classList.remove(\'active\')}); this.classList.add(\'active\');">'+t+'</button>'; }).join('')+'</div>'+
+      '<div class="panel-title" style="font-size:12.5px;">Nutrition score</div><div class="bars">'+barsScore(STATE.nutritionScoreLog, C.gold)+'</div>'+
+      '<div class="panel-title" style="font-size:12.5px;">Health score</div><div class="bars">'+barsScore(STATE.healthScoreLog, C.teal)+'</div>'+
+    '</div>';
+}
+function logWeightFromHealth(){ const v=parseFloat(document.getElementById('hl-weight').value); if(!v)return; STATE.weightLog.push(v); STATE.currentUser.weight=v; pushNotification('Logged weight '+v+'kg.'); renderHealth(); renderShellChrome('health'); }
+function logWaterFromHealth(){ const v=parseFloat(document.getElementById('hl-water').value); if(!v)return; STATE.waterLog[STATE.waterLog.length-1]+=v; pushNotification('Logged '+v+'ml water.'); renderHealth(); renderShellChrome('health'); }
+function logExerciseFromHealth(){ const v=parseFloat(document.getElementById('hl-exercise').value); if(!v)return; STATE.exerciseLog[STATE.exerciseLog.length-1]+=v; pushNotification('Logged '+v+' min exercise.'); renderHealth(); renderShellChrome('health'); }
+
+/* ============================================================
+   AI ANALYSIS PAGE
+   ============================================================ */
+function renderAIAnalysis(){
+  const u = STATE.currentUser;
+  const ai = computeAI(u);
+  document.getElementById('u-content').innerHTML =
+    '<div class="panel">'+
+      '<div class="row between"><div class="panel-title" style="margin-bottom:0;">AI clinical-style nutrition analysis</div>'+
+      '<button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'ai-file\').click()">'+icon('file',12,'currentColor')+' Upload Report</button></div>'+
+      '<input type="file" id="ai-file" class="hidden" onchange="analyzeUploadedReport()" />'+
+      '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:8px;">Based on age, weight, BMI, lifestyle, medical conditions, goal and food preferences you provided.</div>'+
+    '</div>'+
+    '<div class="kpi-row">'+
+      [['heartbeat','Daily Calories',ai.calories+' kcal'],['clipboard','Protein',ai.protein+'g'],['salad','Carbohydrates',ai.carbs+'g'],['droplet','Fat',ai.fat+'g']]
+        .map(k=>'<div class="kpi-card"><div class="kpi-icon">'+icon(k[0],16,C.teal)+'</div><div class="kpi-value f-display">'+k[2]+'</div><div class="kpi-label">'+k[1].toUpperCase()+'</div></div>').join('')+
+    '</div>'+
+    '<div class="row" style="justify-content:space-around;margin-bottom:18px;">'+thaliRing(ai.healthScore,84,C.teal,'Health Score')+thaliRing(ai.nutritionScore,84,C.gold,'Nutrition Score')+thaliRing(Math.round(ai.water*33),84,C.coral,'Water Target (%2L)')+'</div>'+
+    '<div class="panel"><div class="panel-title">Meal schedule</div><div class="row wrap gap8">'+ai.mealSchedule.map(s=>'<span class="filter-chip">'+s+'</span>').join('')+'</div></div>'+
+    '<div class="panel"><div class="panel-title">Recommended foods</div><div style="font-size:12.5px;color:var(--ink-soft);">'+ai.recommendedFoods+'</div></div>'+
+    '<div class="panel"><div class="panel-title">Foods to avoid</div><div style="font-size:12.5px;color:var(--ink-soft);">'+ai.avoidFoods+'</div></div>'+
+    '<div class="kpi-row">'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Weekly goal</div><div style="font-size:12.5px;">'+ai.weeklyGoal+'</div></div>'+
+      '<div class="panel" style="margin-bottom:0;"><div class="panel-title">Monthly goal</div><div style="font-size:12.5px;">'+ai.monthlyGoal+'</div></div>'+
+    '</div>'+
+    '<div class="panel hidden" id="report-analysis-result"></div>';
+}
+function analyzeUploadedReport(){
+  const el = document.getElementById('report-analysis-result');
+  el.innerHTML = '<div class="panel-title">Report analysis</div>'+
+    '<div style="font-size:12px;margin-bottom:6px;"><b>Nutrition Summary:</b> Markers broadly within range for your age and goal.</div>'+
+    '<div style="font-size:12px;margin-bottom:6px;"><b>Risk Factors:</b> None flagged from this upload.</div>'+
+    '<div style="font-size:12px;">Uploading is a demo interaction \u2014 no real medical data was read from your file.</div>';
+  el.classList.remove('hidden');
+  pushNotification('Report analyzed.');
+}
+
+/* ============================================================
+   RECOMMENDED FOODS (search + filter + cart)
+   ============================================================ */
+const OFFER_BANNERS = [
+  'FLAT 50% OFF up to \u20b9100 \u2014 use code NALAM50',
+  'FREE DELIVERY on your first order \u2014 use code FREESHIP',
+  'NEW USER SPECIAL: 20% OFF up to \u20b9150 \u2014 use code FIRST20',
+  'NalamUnavu Plus members get free delivery on every order'
+];
+let offerBannerIdx = 0;
+function renderRecommendedFoods(){
+  offerBannerIdx = 0;
+  document.getElementById('u-content').innerHTML =
+    '<div class="offer-banner" id="offer-banner"></div>'+
+    '<div class="panel">'+
+      '<div class="row gap8" style="margin-bottom:12px;">'+
+        icon('search',16,'var(--ink-soft)')+
+        '<input id="food-search" placeholder="Search for meals, cuisines, restaurants..." value="'+STATE.searchQuery+'" oninput="STATE.searchQuery=this.value; renderMealGrid();" style="flex:1;padding:10px 14px;border:1px solid var(--line);border-radius:10px;font-size:13px;" />'+
+      '</div>'+
+      '<div class="row wrap gap8" style="margin-bottom:12px;">'+
+        '<span class="f-mono" style="font-size:10px;color:var(--ink-soft);align-self:center;">TRENDING:</span>'+
+        ['diabetic','protein bowl','south indian','weight loss'].map(t=>'<button class="filter-chip" onclick="STATE.searchQuery=\''+t+'\'; renderRecommendedFoods();">'+t+'</button>').join('')+
+      '</div>'+
+      '<div class="view-toggle"><button class="'+(STATE.foodView==='meals'?'active':'')+'" onclick="setFoodView(\'meals\')">Meals</button><button class="'+(STATE.foodView==='restaurants'?'active':'')+'" onclick="setFoodView(\'restaurants\')">Restaurants</button></div>'+
+      (STATE.filterRestaurant ? '<div class="row gap8" style="margin-bottom:8px;"><span class="filter-chip active-coral">'+STATE.filterRestaurant+'</span><button class="btn btn-ghost btn-sm" onclick="clearRestaurantFilter()">Clear</button></div>' : '')+
+      '<div class="row wrap gap8" style="margin-bottom:8px;">'+CUISINES.map(c=>'<button class="filter-chip'+(STATE.cuisineFilter===c?' active-coral':'')+'" onclick="setCuisine(\''+c+'\')">'+c+'</button>').join('')+'</div>'+
+      '<div class="row wrap gap8">'+FILTER_TAGS.map(t=>'<button class="filter-chip'+(STATE.filterTag===t?' active':'')+'" onclick="setFilterTag(\''+t+'\')">'+t+'</button>').join('')+'</div>'+
+    '</div>'+
+    (STATE.currentUser.favorites.length>0 && STATE.foodView==='meals' ? '<div class="panel"><div class="panel-title">'+icon('star',13,C.gold)+' Your favorites</div><div class="meal-grid" id="fav-grid"></div></div>' : '')+
+    '<div class="panel-title" style="margin:6px 0 12px;">'+(STATE.foodView==='meals' ? 'Recommended for your goal' : 'Restaurants near you')+'</div>'+
+    '<div class="meal-grid" id="meal-grid"></div>'+
+    '<div class="sticky-cart-bar hidden" id="sticky-cart-bar"></div>';
+  renderOfferBanner();
+  if (STATE.foodView==='restaurants') renderRestaurantGrid(); else renderMealGrid();
+  renderStickyCartBar();
+}
+function setFoodView(v){ STATE.foodView = v; renderRecommendedFoods(); }
+function clearRestaurantFilter(){ STATE.filterRestaurant = null; renderRecommendedFoods(); }
+function viewRestaurantMenu(name){ STATE.filterRestaurant = name; STATE.foodView = 'meals'; renderRecommendedFoods(); }
+function goToRestaurantMenu(name){ STATE.filterRestaurant = name; STATE.foodView = 'meals'; route('recommended-foods'); }
+function renderRestaurantGrid(){
+  const names = [...new Set(MEALS.map(m=>m.restaurant))];
+  const scored = names.map(name => Object.assign({name:name}, restaurantMatchDetail(name)));
+  scored.sort(function(a,b){ return b.score - a.score; });
+  const grid = document.getElementById('meal-grid');
+  grid.innerHTML = scored.map(r => {
+    const items = r.items;
+    const cuisines = [...new Set(items.map(m=>m.cuisine))];
+    const avgRating = (items.reduce((s,m)=>s+m.rating,0)/items.length).toFixed(1);
+    const minPrep = Math.min(...items.map(m=>m.prep));
+    return '<div class="restaurant-card">'+
+      '<div class="row between"><span class="meal-name">'+r.name+'</span><span class="status-chip">'+icon('star',9,C.gold)+' '+avgRating+'</span></div>'+
+      '<div class="row gap8" style="margin:4px 0 6px;"><span class="status-chip" style="background:var(--gold-tint);color:#8A5A16;">'+r.score+'% AI match for you</span></div>'+
+      '<div class="meal-restaurant" style="margin-bottom:8px;">'+cuisines.join(', ')+' \u00b7 '+minPrep+'-'+(minPrep+15)+' min \u00b7 '+items[0].distance+'</div>'+
+      (r.reasons.length>0 ? '<div class="ai-reason-box">'+r.reasons.map(function(t){ return '<div class="ai-reason">'+icon('check',11,C.teal)+'<span>'+t+'</span></div>'; }).join('')+'</div>' : '')+
+      '<div class="row wrap gap8" style="margin-bottom:10px;">'+items.slice(0,3).map(m=>'<span class="filter-chip">'+m.name.split(' ').slice(0,2).join(' ')+'</span>').join('')+'</div>'+
+      '<button class="btn btn-primary btn-sm" style="margin-top:auto;" onclick="viewRestaurantMenu(\''+r.name+'\')">View Menu ('+items.length+' items)</button>'+
+    '</div>';
+  }).join('');
+}
+function renderOfferBanner(){
+  const el = document.getElementById('offer-banner');
+  if (!el) return;
+  el.innerHTML = icon('utensils',15,'#fff')+'<span>'+OFFER_BANNERS[offerBannerIdx]+'</span>';
+  offerBannerIdx = (offerBannerIdx+1) % OFFER_BANNERS.length;
+}
+setInterval(()=>{ if (document.getElementById('offer-banner')) renderOfferBanner(); }, 3500);
+
+function setFilterTag(t){ STATE.filterTag = t; renderRecommendedFoods(); }
+function setCuisine(c){ STATE.cuisineFilter = c; renderRecommendedFoods(); }
+
+function mealBadge(m){
+  if (m.rating >= 4.7) return '<span class="meal-badge bestseller">Bestseller</span>';
+  if (m.rating >= 4.5) return '<span class="meal-badge trending">Trending</span>';
+  return '';
+}
+function mealCardHTML(m){
+  const detail = mealMatchDetail(m);
+  const match = detail.score;
+  const isFav = STATE.currentUser.favorites.indexOf(m.id) !== -1;
+  const topReasons = detail.reasons.slice(0,2);
+  const rest = RESTAURANTS.find(function(x){return x.name===m.restaurant;});
+  const canOrder = rest && rest.isOnline && isRestaurantOpenNow(rest) && m.available!==false;
+  return '<div class="meal-card">'+
+    '<img class="meal-image" src="'+(m.image||'/assets/meal-1.svg')+'" alt="'+m.name.replace(/"/g,'&quot;')+'" loading="lazy" />'+
+    '<div class="row between">'+
+      '<div class="row gap8"><span class="veg-dot" style="border-color:'+(m.veg?C.teal:C.red)+';"><span style="background:'+(m.veg?C.teal:C.red)+';"></span></span>'+
+      '<span class="meal-name">'+m.name+'</span></div>'+
+      '<button class="fav-btn" onclick="toggleFavorite('+m.id+')" style="color:'+(isFav?C.coral:'var(--line)')+';">\u2665</button>'+
+    '</div>'+
+    '<div class="row gap8" style="margin:4px 0 6px;">'+mealBadge(m)+'<span class="match-chip">'+match+'% AI Match</span>'+(!canOrder?'<span class="status-chip rejected">Closed Now</span>':'')+'</div>'+
+    '<div class="meal-restaurant">'+m.restaurant+' \u00b7 '+m.cuisine+' \u00b7 '+icon('star',9,C.gold)+' '+m.rating+' \u00b7 '+m.prep+' min \u00b7 '+m.distance+'</div>'+
+    '<div class="meal-macros">'+
+      '<div class="meal-macro"><b>'+m.calories+'</b><span>KCAL</span></div>'+
+      '<div class="meal-macro"><b>'+m.protein+'g</b><span>PROTEIN</span></div>'+
+      '<div class="meal-macro"><b>'+m.carbs+'g</b><span>CARBS</span></div>'+
+      '<div class="meal-macro"><b>'+m.fat+'g</b><span>FAT</span></div>'+
+    '</div>'+
+    (topReasons.length>0 ? '<div class="ai-reason-box">'+topReasons.map(function(r){ return '<div class="ai-reason '+(r.type==='caution'?'caution':'')+'">'+icon(r.type==='caution'?'alert':'check',11,r.type==='caution'?C.red:C.teal)+'<span>'+r.text+'</span></div>'; }).join('')+'</div>' : '')+
+    '<div style="font-size:10.5px;color:var(--ink-soft);margin-bottom:8px;">Fiber '+m.fiber+'g \u00b7 Allergens: '+m.allergens+'</div>'+
+    '<div style="font-size:10.5px;color:var(--ink-soft);margin-bottom:10px;">'+m.benefits+'</div>'+
+    '<div class="row between" style="margin-top:auto;">'+
+      '<span style="font-family:\'Baloo 2\',sans-serif;font-weight:700;">\u20b9'+m.price+'</span>'+
+      (canOrder ?
+      '<div class="row gap8">'+
+        '<button class="btn btn-ghost btn-sm" onclick="addToCart('+m.id+')">'+icon('cart',12,'currentColor')+' Add</button>'+
+        '<button class="btn btn-primary btn-sm" onclick="addToCart('+m.id+'); route(\'orders\');">Order Now</button>'+
+      '</div>' : '<span class="f-mono" style="font-size:10px;color:var(--ink-soft);">Unavailable right now</span>')+
+    '</div>'+
+  '</div>';
+}
+function renderMealGrid(){
+  const q = STATE.searchQuery.toLowerCase();
+  const filtered = MEALS.filter(m => {
+    const matchesTag = STATE.filterTag==='All' || m.tags.indexOf(STATE.filterTag)!==-1;
+    const matchesCuisine = STATE.cuisineFilter==='All Cuisines' || m.cuisine===STATE.cuisineFilter;
+    const matchesRestaurant = !STATE.filterRestaurant || m.restaurant===STATE.filterRestaurant;
+    const matchesQuery = !q || m.name.toLowerCase().indexOf(q)!==-1 || m.restaurant.toLowerCase().indexOf(q)!==-1 || m.cuisine.toLowerCase().indexOf(q)!==-1;
+    return matchesTag && matchesCuisine && matchesRestaurant && matchesQuery;
+  });
+  filtered.sort(function(a,b){ return mealMatch(b) - mealMatch(a); });
+  const grid = document.getElementById('meal-grid');
+  grid.innerHTML = filtered.length===0 ? '<div style="font-size:13px;color:var(--ink-soft);">No meals match your search/filter.</div>' : filtered.map(m=>mealCardHTML(m)).join('');
+  const favGrid = document.getElementById('fav-grid');
+  if (favGrid) favGrid.innerHTML = MEALS.filter(m=>STATE.currentUser.favorites.indexOf(m.id)!==-1).sort(function(a,b){ return mealMatch(b)-mealMatch(a); }).map(m=>mealCardHTML(m)).join('');
+  renderStickyCartBar();
+}
+function renderStickyCartBar(){
+  const bar = document.getElementById('sticky-cart-bar');
+  if (!bar) return;
+  if (STATE.cart.length===0) { bar.classList.add('hidden'); return; }
+  const count = STATE.cart.reduce((s,i)=>s+i.qty,0);
+  bar.classList.remove('hidden');
+  bar.innerHTML = '<span>'+count+' item(s) added \u00b7 \u20b9'+cartTotal()+'</span><button class="btn btn-coral btn-sm" onclick="route(\'orders\')">View Cart '+icon('chevron',12,'currentColor')+'</button>';
+}
+
+/* ============================================================
+   ORDERS (cart, checkout, tracking, ratings, invoices)
+   ============================================================ */
+function addToCart(mealId){
+  const meal = MEALS.find(m=>m.id===mealId);
+  if (STATE.cart.length>0) {
+    const firstMeal = MEALS.find(m=>m.id===STATE.cart[0].mealId);
+    if (firstMeal.restaurant !== meal.restaurant) {
+      if (!confirm('Your cart has items from '+firstMeal.restaurant+'. Clear cart and add this item from '+meal.restaurant+' instead?')) return;
+      STATE.cart = [];
+    }
+  }
+  const existing = STATE.cart.find(c=>c.mealId===mealId);
+  if (existing) existing.qty += 1; else STATE.cart.push({mealId:mealId, qty:1});
+  pushNotification('Added to cart.');
+  renderShellChrome(currentScreenName());
+  if (currentScreenName()==='orders') renderOrders();
+  if (currentScreenName()==='recommended-foods') renderStickyCartBar();
+}
+function billBreakdown(){
+  const subtotal = cartTotal();
+  const isPlus = STATE.currentUser.isPlus;
+  let deliveryFee = (isPlus || subtotal >= 299) ? 0 : 25;
+  const platformFee = subtotal > 0 ? 5 : 0;
+  let discount = 0;
+  const coupon = STATE.appliedCoupon ? COUPONS[STATE.appliedCoupon] : null;
+  if (coupon) {
+    if (coupon.type === 'percent') discount = Math.min(Math.round(subtotal*coupon.value/100), coupon.cap);
+    if (coupon.type === 'shipping') deliveryFee = 0;
+  }
+  const taxable = Math.max(0, subtotal - discount);
+  const gst = Math.round(taxable * 0.05);
+  const total = Math.max(0, subtotal - discount) + deliveryFee + platformFee + gst;
+  return {subtotal, deliveryFee, platformFee, discount, gst, total, isPlus, coupon};
+}
+function renderOrders(){
+  const cartHTML = STATE.cart.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">Your cart is empty. <a href="javascript:void(0)" onclick="route(\'recommended-foods\')" style="color:var(--teal);font-weight:700;">Browse meals</a></div>' :
+    STATE.cart.map(c => {
+      const m = MEALS.find(x=>x.id===c.mealId);
+      return '<div class="cart-row"><div style="flex:1;"><div style="font-size:12.5px;font-weight:700;">'+m.name+'</div><div class="f-mono" style="font-size:10px;color:var(--ink-soft);">\u20b9'+m.price+' each</div></div>'+
+        '<button class="qty-btn" onclick="changeQty('+c.mealId+',-1)">'+icon('minus',12,'currentColor')+'</button>'+
+        '<span style="width:24px;text-align:center;font-size:12.5px;">'+c.qty+'</span>'+
+        '<button class="qty-btn" onclick="changeQty('+c.mealId+',1)">'+icon('plus',12,'currentColor')+'</button>'+
+        '<span style="width:70px;text-align:right;font-family:\'Baloo 2\',sans-serif;font-weight:700;">\u20b9'+(m.price*c.qty)+'</span></div>';
+    }).join('');
+  const bill = billBreakdown();
+  document.getElementById('u-content').innerHTML =
+    (!STATE.currentUser.isPlus ? '<div class="plus-banner"><div><div class="row gap8" style="margin-bottom:6px;"><span class="plus-badge">PLUS</span><b>NalamUnavu Plus</b></div><div style="font-size:11.5px;color:#CFC8E8;">Free delivery on every order + priority support \u2014 \u20b999/month</div></div><button class="btn btn-gold btn-sm" onclick="joinPlus()">Join Plus</button></div>' :
+     '<div class="plus-banner"><div class="row gap8"><span class="plus-badge">PLUS</span><b>You\u2019re a Plus member</b></div><span style="font-size:11.5px;color:#CFC8E8;">Free delivery active</span></div>')+
+    '<div class="panel"><div class="panel-title">Your cart</div>'+cartHTML+
+      (STATE.cart.length>0 ?
+        '<div class="row gap8" style="margin-top:12px;"><input id="coupon-input" placeholder="Enter coupon code" style="flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:9px;font-size:12.5px;" value="'+(STATE.appliedCoupon||'')+'" />'+
+        '<button class="btn btn-ghost btn-sm" onclick="applyCoupon()">Apply</button>'+
+        (STATE.appliedCoupon ? '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="removeCoupon()">Remove</button>' : '')+'</div>'+
+        (bill.coupon ? '<div class="f-mono" style="font-size:10.5px;color:'+C.teal+';margin-top:6px;">'+STATE.appliedCoupon+' applied \u2014 '+bill.coupon.desc+'</div>' : '')+
+        '<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px;">'+
+          billRow('Item total', '\u20b9'+bill.subtotal)+
+          billRow('Delivery fee', bill.deliveryFee===0 ? '<span style="color:'+C.teal+';">FREE</span>' : '\u20b9'+bill.deliveryFee)+
+          billRow('Platform fee', '\u20b9'+bill.platformFee)+
+          (bill.discount>0 ? billRow('Coupon discount', '-\u20b9'+bill.discount) : '')+
+          billRow('GST (5%)', '\u20b9'+bill.gst)+
+        '</div>'+
+        '<div class="row between" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);"><span style="font-size:13.5px;font-weight:700;">To Pay</span><span style="font-family:\'Baloo 2\',sans-serif;font-size:18px;font-weight:700;">\u20b9'+bill.total+'</span></div>'+
+        cartAllergyWarning()+
+        '<div class="form-field" style="margin-top:12px;"><label>Delivery Address</label><div style="font-size:12.5px;">'+STATE.currentUser.location+' <a href="javascript:void(0)" onclick="route(\'profile\')" style="color:var(--teal);font-weight:600;font-size:11px;">Change</a></div></div>'+
+        '<div class="form-field"><label>Dietary Instructions (optional)</label><input id="dietary-instructions" placeholder="e.g. Less spicy, no onion" /></div>'+
+        '<div class="form-field"><label>Delivery time</label><select id="delivery-slot"><option>Deliver Now</option><option>Today, 6:00 PM</option><option>Today, 8:00 PM</option><option>Tomorrow, 8:00 AM</option></select>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:4px;">Estimated delivery: 35\u201345 minutes from acceptance</div></div>'+
+        '<div class="row gap8" style="margin-top:4px;"><select id="pay-method" style="padding:9px;border:1px solid var(--line);border-radius:9px;"><option>Online Payment (Razorpay)</option><option>Cash on Delivery</option></select>'+
+        '<button class="btn btn-primary" onclick="placeOrder()">Place Order</button></div>' : '')+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Your orders</div>'+
+      (STATE.orders.filter(function(o){return !o.isSubscriptionPayment;}).length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders placed yet.</div>' : STATE.orders.filter(function(o){return !o.isSubscriptionPayment;}).map(o=>orderCard(o)).join(''))+
+    '</div>';
+}
+function cartAllergyWarning(){
+  const flaggedItems = STATE.cart.map(function(c){ return MEALS.find(function(m){ return m.id===c.mealId; }); })
+    .filter(function(m){ return mealMatchDetail(m).reasons.some(function(r){ return r.type==='caution' && r.text.indexOf('allergen')!==-1; }); });
+  if (flaggedItems.length===0) return '';
+  return '<div class="row gap8" style="background:var(--red-tint);border-radius:8px;padding:9px 12px;margin-top:10px;">'+icon('alert',14,C.red)+
+    '<span style="font-size:11.5px;color:'+C.red+';">Allergy warning: '+flaggedItems.map(function(m){return m.name;}).join(', ')+' may contain an allergen you\u2019ve flagged.</span></div>';
+}
+function billRow(label, value){
+  return '<div class="row between" style="padding:4px 0;font-size:12px;color:var(--ink-soft);"><span>'+label+'</span><span style="color:var(--ink);">'+value+'</span></div>';
+}
+function applyCoupon(){
+  const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+  if (!COUPONS[code]) { alert('Invalid or expired coupon code.'); return; }
+  STATE.appliedCoupon = code;
+  pushNotification('Coupon '+code+' applied.');
+  renderOrders();
+}
+function removeCoupon(){ STATE.appliedCoupon = null; renderOrders(); }
+function joinPlus(){
+  STATE.currentUser.isPlus = true;
+  if (STATE.currentUser.wallet >= 99) STATE.currentUser.wallet -= 99;
+  pushNotification('Welcome to NalamUnavu Plus! Free delivery is now active.');
+  renderOrders(); renderShellChrome('orders');
+}
+function cartTotal(){ return STATE.cart.reduce((sum,c)=>{ const m=MEALS.find(x=>x.id===c.mealId); return sum+m.price*c.qty; },0); }
+function changeQty(mealId,delta){
+  const item = STATE.cart.find(c=>c.mealId===mealId);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty<=0) STATE.cart = STATE.cart.filter(c=>c.mealId!==mealId);
+  renderOrders(); renderShellChrome('orders');
+}
+const ORDER_STAGES = ['Order Placed','Restaurant Accepted','Preparing','Ready','Picked Up','Out for Delivery','Delivered'];
+async function createRazorpayPayment(amount, description){
+  if (!window.Razorpay) throw new Error('Payment gateway did not load. Please refresh and try again.');
+  const createRes = await fetch('/api/create-order', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({amount:amount, currency:'INR', receipt:'NALAM-'+Date.now(), description:description})
+  });
+  const orderData = await createRes.json();
+  if (!createRes.ok) throw new Error(orderData.error || 'Unable to initialize payment.');
+  return await new Promise(function(resolve,reject){
+    const rz = new Razorpay({
+      key:orderData.keyId, amount:orderData.amount, currency:orderData.currency,
+      name:'NalamUnavu', description:description, order_id:orderData.orderId,
+      prefill:{name:STATE.currentUser && STATE.currentUser.name || '', email:STATE.currentUser && STATE.currentUser.email || ''},
+      theme:{color:'#0B6E4F'},
+      handler:async function(response){
+        try{
+          const vr = await fetch('/api/verify-payment', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(response)});
+          const vd = await vr.json();
+          if (!vr.ok || !vd.verified) throw new Error(vd.error || 'Payment verification failed.');
+          resolve({paymentId:response.razorpay_payment_id, orderId:response.razorpay_order_id});
+        }catch(e){reject(e);}
+      },
+      modal:{ondismiss:function(){reject(new Error('Payment cancelled.'));}}
+    });
+    rz.on('payment.failed', function(resp){ reject(new Error((resp.error && resp.error.description) || 'Payment failed.')); });
+    rz.open();
+  });
+}
+async function placeOrder(){
+  if (STATE.cart.length===0) return;
+  const method = document.getElementById('pay-method').value;
+  const deliverySlot = document.getElementById('delivery-slot').value;
+  const dietaryNote = document.getElementById('dietary-instructions') ? document.getElementById('dietary-instructions').value : '';
+  const bill = billBreakdown();
+  const total = bill.total;
+  let paymentRef = null;
+  if (method==='Online Payment (Razorpay)') {
+    try { paymentRef = await createRazorpayPayment(total, 'NalamUnavu food order'); }
+    catch(e){ alert(e.message); return; }
+  }
+  const firstMeal = MEALS.find(m=>m.id===STATE.cart[0].mealId);
+  const order = { id: 'ORD-' + Math.floor(1000+Math.random()*9000), items: STATE.cart.map(c=>({mealId:c.mealId, qty:c.qty})),
+    total: total, subtotal: bill.subtotal, deliveryFee: bill.deliveryFee, taxes: bill.gst+bill.platformFee, discount: bill.discount,
+    method: method, paymentStatus: method==='Cash on Delivery' ? 'Pending' : 'Paid', deliverySlot: deliverySlot, dietaryNote: dietaryNote || 'None', restaurantName: firstMeal.restaurant,
+    partner: null, status:'Order Placed', stageIndex:0, rating:0, deliveryOTP: String(1000+Math.floor(Math.random()*9000)),
+    deliveryAddress: STATE.currentUser.location, placedAt:new Date().toLocaleString(), transactionId:paymentRef ? paymentRef.paymentId : ('COD-'+Date.now()),
+    gatewayOrderId:paymentRef ? paymentRef.orderId : null, customerEmail: STATE.currentUser.email };
+  STATE.orders.unshift(order);
+  const rest = RESTAURANTS.find(r=>r.name===firstMeal.restaurant);
+  if (rest) rest.notifications.unshift({msg:'New order '+order.id+' received.', at:new Date().toLocaleTimeString()});
+  STATE.cart = [];
+  STATE.appliedCoupon = null;
+  pushNotification('Order '+order.id+' placed successfully.');
+  renderOrders(); renderShellChrome('orders');
+}
+function orderCard(o){
+  const m0 = MEALS.find(x=>x.id===o.items[0].mealId);
+  const canCancel = o.stageIndex <= 1 && o.status !== 'Cancelled' && o.method==='Cash on Delivery';
+  const canRate = o.status==='Delivered' && o.rating===0;
+  return '<div class="panel" style="background:var(--mint);">'+
+    '<div class="row between"><span style="font-size:12.5px;font-weight:700;">Order #'+o.id+'</span><span class="status-chip'+(o.status==='Cancelled'?' danger':(o.status==='Delivered'?'':' warn'))+'">'+o.status+'</span></div>'+
+    '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin:4px 0 8px;">'+o.items.length+' item(s) \u00b7 '+m0.name+(o.items.length>1?' +'+(o.items.length-1)+' more':'')+' \u00b7 \u20b9'+o.total+' \u00b7 '+o.method+(o.deliverySlot?' \u00b7 '+o.deliverySlot:'')+'</div>'+
+    (o.stageIndex>=3 && o.stageIndex<6 && o.status!=='Cancelled' ? '<div class="row between" style="background:var(--gold-tint);border-radius:8px;padding:8px 10px;margin-bottom:8px;"><span style="font-size:11px;color:#8A5A16;">Delivery OTP (share with delivery partner)</span><span class="f-mono" style="font-weight:700;color:#8A5A16;">'+o.deliveryOTP+'</span></div>' : '')+
+    (o.partner ? '<div class="partner-card"><div class="partner-avatar">'+o.partner[0].charAt(0)+'</div><div><div style="font-size:12px;font-weight:700;">'+o.partner[0]+'</div><div class="f-mono" style="font-size:9.5px;color:var(--ink-soft);">'+o.partner[1]+' \u00b7 Delivery partner</div></div></div>' : '')+
+    '<div id="track-'+o.id+'" class="hidden">'+
+      ORDER_STAGES.map((s,i)=>'<div class="tracking-step"><div class="tracking-dot" style="background:'+(o.status!=='Cancelled' && i<=o.stageIndex?C.teal:'var(--line)')+';"></div><span style="font-size:11.5px;font-weight:'+(i<=o.stageIndex?'700':'400')+';">'+s+'</span></div>').join('')+
+    '</div>'+
+    '<div class="row gap8 wrap">'+
+      '<button class="btn btn-ghost btn-sm" onclick="toggleTrack(\''+o.id+'\')">Track Order</button>'+
+      (canCancel ? '<button class="btn btn-ghost btn-sm" onclick="cancelOrder(\''+o.id+'\')" style="color:var(--red);border-color:var(--red);">Cancel</button>' : '')+
+      '<button class="btn btn-ghost btn-sm" onclick="reorder(\''+o.id+'\')">Reorder</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="downloadReceipt(\''+o.id+'\')">'+icon('download',12,'currentColor')+' Receipt</button>'+
+    '</div>'+
+    (canRate ? '<div class="star-row" style="margin-top:10px;">'+[1,2,3,4,5].map(n=>'<button class="star-btn" onclick="rateOrder(\''+o.id+'\','+n+')">\u2605</button>').join('')+'</div>' : (o.rating>0 ? '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-top:8px;">Rated '+o.rating+'/5</div>' : ''))+
+  '</div>';
+}
+function toggleTrack(id){ document.getElementById('track-'+id).classList.toggle('hidden'); }
+function cancelOrder(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o) return;
+  o.status = 'Cancelled';
+  if (o.method==='Wallet') STATE.currentUser.wallet += o.total;
+  pushNotification('Order '+id+' cancelled'+(o.method==='Wallet'?' and refunded to wallet':'')+'.');
+  renderOrders(); renderShellChrome('orders');
+}
+function reorder(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o) return;
+  STATE.cart = [];
+  o.items.forEach(it => { STATE.cart.push({mealId:it.mealId, qty:it.qty}); });
+  pushNotification('Items from order '+id+' added to cart.');
+  renderOrders(); renderShellChrome('orders');
+}
+function rateOrder(id, stars){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o) return;
+  o.rating = stars;
+  pushNotification('You rated order '+id+' '+stars+'/5.');
+  renderOrders(); renderShellChrome('orders');
+}
+function downloadReceipt(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o) return;
+  let text = 'NALAMUNAVU \u2014 PAYMENT RECEIPT\n';
+  text += '================================\n';
+  text += 'Order ID: '+o.id+'\nTransaction ID: '+o.transactionId+'\nCustomer: '+STATE.currentUser.name+'\nRestaurant: '+o.restaurantName+'\nDate/Time: '+o.placedAt+'\n\n';
+  if (o.isSubscriptionPayment) {
+    text += 'SUBSCRIPTION: '+o.planName+' (weekly)\n\nTOTAL PAID: \u20b9'+o.total+'\n\nPayment Method: '+o.method+'\nPayment Status: '+(o.paymentStatus||'Paid')+'\n\nThank you for using NalamUnavu.\n\u00a9 Garden Greens Private Limited. All rights reserved.';
+  } else {
+    text += 'ITEMS:\n';
+    o.items.forEach(it => { const m = MEALS.find(x=>x.id===it.mealId); text += '- '+m.name+' x'+it.qty+'  (\u20b9'+m.price+' each) = \u20b9'+(m.price*it.qty)+'\n'; });
+    text += '\nSubtotal: \u20b9'+o.subtotal+'\nDelivery Fee: \u20b9'+o.deliveryFee+'\nTaxes/Charges: \u20b9'+o.taxes+(o.discount?'\nDiscount: -\u20b9'+o.discount:'')+'\nTOTAL: \u20b9'+o.total+'\n\nPayment Method: '+o.method+'\nPayment Status: '+(o.paymentStatus||'Paid')+'\n\nThank you for using NalamUnavu.\n\u00a9 Garden Greens Private Limited. All rights reserved.';
+  }
+  const blob = new Blob([text], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'receipt-'+o.id+'.txt';
+  a.click();
+  pushNotification('Receipt for '+id+' downloaded.');
+}
+
+/* ============================================================
+   ORDER TRANSITIONS DRIVEN BY RESTAURANT / DELIVERY ROLES
+   ============================================================ */
+function restaurantOrdersFor(restaurantName){
+  return STATE.orders.filter(function(o){ return o.restaurantName===restaurantName && !o.isSubscriptionPayment; });
+}
+function acceptOrderRestaurant(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==0) return;
+  o.stageIndex = 1; o.status = ORDER_STAGES[1];
+  pushNotification('Restaurant accepted order '+id+'.');
+  renderBizContent();
+}
+function rejectOrderRestaurant(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==0) return;
+  o.status = 'Cancelled';
+  if (o.method==='Wallet') STATE.currentUser && (STATE.currentUser.wallet += o.total);
+  pushNotification('Restaurant rejected order '+id+'. Refund issued.');
+  renderBizContent();
+}
+function markPreparing(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==1) return;
+  o.stageIndex = 2; o.status = ORDER_STAGES[2];
+  renderBizContent();
+}
+function markReady(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==2) return;
+  o.stageIndex = 3; o.status = ORDER_STAGES[3];
+  pushNotification('Order '+id+' is ready for pickup.');
+  renderBizContent();
+}
+function deliveryAcceptPickup(id){
+  const partner = STATE.deliveryPartners.find(function(p){ return p.id===STATE.currentBiz.partnerId; });
+  if (!partner || !partner.online) { alert('Go online before accepting deliveries.'); return; }
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==3 || o.partner) return;
+  o.partner = [partner.name, partner.phone];
+  o.stageIndex = 4; o.status = ORDER_STAGES[4];
+  pushNotification(partner.name+' picked up order '+id+'.');
+  renderBizContent();
+}
+function deliveryStartTransit(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==4) return;
+  o.stageIndex = 5; o.status = ORDER_STAGES[5];
+  renderBizContent();
+}
+function deliveryMarkDelivered(id){
+  const o = STATE.orders.find(x=>x.id===id);
+  if (!o || o.stageIndex!==5) return;
+  const entered = document.getElementById('otp-input-'+id).value.trim();
+  const errEl = document.getElementById('otp-error-'+id);
+  if (entered !== o.deliveryOTP) { errEl.textContent = 'Incorrect OTP. Ask the customer for the code shown in their app.'; errEl.classList.remove('hidden'); return; }
+  errEl.classList.add('hidden');
+  o.stageIndex = 6; o.status = ORDER_STAGES[6]; o.deliveredAt = new Date().toLocaleString();
+  const partner = STATE.deliveryPartners.find(function(p){ return p.id===STATE.currentBiz.partnerId; });
+  if (partner) { partner.deliveries += 1; partner.earnings += 35; }
+  const rest = RESTAURANTS.find(function(r){ return r.name===o.restaurantName; });
+  if (rest) rest.revenue += o.subtotal;
+  applyNutritionConsumption(o);
+  pushNotification('Order '+id+' delivered successfully.');
+  renderBizContent();
+}
+function applyNutritionConsumption(order){
+  const acc = STATE.accounts.find(function(a){ return a.role==='user' && a.email===order.customerEmail; });
+  let totals = {calories:0,protein:0,carbs:0,fat:0,fiber:0};
+  order.items.forEach(function(it){
+    const m = MEALS.find(function(x){ return x.id===it.mealId; });
+    if (!m) return;
+    totals.calories += m.calories*it.qty; totals.protein += m.protein*it.qty;
+    totals.carbs += m.carbs*it.qty; totals.fat += m.fat*it.qty; totals.fiber += m.fiber*it.qty;
+  });
+  if (STATE.currentUser && STATE.currentUser.email === order.customerEmail) {
+    STATE.currentUser.consumedToday.calories += totals.calories;
+    STATE.currentUser.consumedToday.protein += totals.protein;
+    STATE.currentUser.consumedToday.carbs += totals.carbs;
+    STATE.currentUser.consumedToday.fat += totals.fat;
+    STATE.currentUser.consumedToday.fiber += totals.fiber;
+  } else if (acc) {
+    acc.profile.consumedToday.calories += totals.calories;
+    acc.profile.consumedToday.protein += totals.protein;
+    acc.profile.consumedToday.carbs += totals.carbs;
+    acc.profile.consumedToday.fat += totals.fat;
+    acc.profile.consumedToday.fiber += totals.fiber;
+  }
+  STATE.nutritionScoreLog[STATE.nutritionScoreLog.length-1] = Math.min(99, STATE.nutritionScoreLog[STATE.nutritionScoreLog.length-1]+1);
+}
+
+/* ============================================================
+   BIZ SHELL: Restaurant / Delivery / Admin / Super Admin
+   ============================================================ */
+const BIZ_CONFIG = {
+  restaurant: { title:'Restaurant Portal',
+    sidebar:[['home','Dashboard','dashboard'],['utensils','Menu','menu'],['cart','Orders','orders'],['clipboard','Plans','plans'],['rupee','Payments','payments'],['building','Profile','profile']] },
+  delivery: { title:'Delivery Partner App',
+    sidebar:[['home','Dashboard','dashboard'],['truck','Delivery Requests','requests'],['clock','History','history'],['rupee','Earnings','earnings'],['user','Profile','profile']] },
+  admin: { title:'Admin Portal',
+    sidebar:[['home','Overview','overview'],['users','Users','users'],['utensils','Restaurants','restaurants'],['cart','Orders','orders'],['truck','Delivery','delivery']] },
+  superadmin: { title:'Super Admin Portal',
+    sidebar:[['home','Overview','overview'],['shield','Verification Queue','verification'],['users','Users','users'],['trending','Analytics','analytics'],['clipboard','Audit Log','audit']] }
+};
+function renderBizShell(role, section){
+  const cfg = BIZ_CONFIG[role];
+  document.getElementById('biz-sidebar-nav').innerHTML = cfg.sidebar.map(function(s){
+    return '<div class="sidebar-item'+(s[2]===section?' active':'')+'" onclick="bizRoute(\''+role+'\',\''+s[2]+'\')">'+icon(s[0],16,'currentColor')+'<span>'+s[1]+'</span></div>';
+  }).join('');
+  document.getElementById('biz-logout-item').innerHTML = icon('logout',16,'currentColor')+'<span>Logout</span>';
+  document.getElementById('biz-title').textContent = cfg.title;
+  document.getElementById('biz-sub').textContent = 'ROUTE: /biz/'+role+'/'+section;
+  document.getElementById('biz-avatar').textContent = STATE.currentBiz.name.charAt(0);
+  document.getElementById('biz-hamburger').innerHTML = icon('menu',16,'#CFE3DB');
+  let chip = '';
+  if (role==='restaurant') { const r = getMyRestaurant(); chip = '<span class="status-chip '+statusClass(r.status)+'">'+r.status+'</span>'; }
+  if (role==='delivery') { const p = getMyPartner(); chip = '<span class="status-chip '+statusClass(p.status)+'">'+p.status+'</span> <span class="status-chip '+(p.online?'approved':'')+'">'+(p.online?'Online':'Offline')+'</span>'; }
+  if (role==='admin') chip = '<span class="status-chip info">Admin</span>';
+  if (role==='superadmin') chip = '<span class="status-chip info">Super Admin</span>';
+  document.getElementById('biz-status-chip').innerHTML = chip;
+  renderBizContent();
+}
+function statusClass(s){ return s==='Approved' ? 'approved' : (s==='Pending' ? 'pending' : 'rejected'); }
+function getMyRestaurant(){ return RESTAURANTS.find(function(r){ return r.id===STATE.currentBiz.restaurantId; }); }
+function getMyPartner(){ return DELIVERY_PARTNERS.find(function(p){ return p.id===STATE.currentBiz.partnerId; }); }
+function renderBizContent(){
+  let parts = location.hash.replace('#/biz/','').split('/');
+  const role = parts[0], section = parts[1] || ((role==='admin'||role==='superadmin')?'overview':'dashboard');
+  const fn = BIZ_RENDERERS[role] && BIZ_RENDERERS[role][section];
+  if (fn) fn();
+  const chip = document.getElementById('biz-status-chip');
+  if (chip && role==='delivery') { const p = getMyPartner(); chip.innerHTML = '<span class="status-chip '+statusClass(p.status)+'">'+p.status+'</span> <span class="status-chip '+(p.online?'approved':'')+'">'+(p.online?'Online':'Offline')+'</span>'; }
+}
+function bizToggleOnline(){
+  const p = getMyPartner();
+  if (p.status!=='Approved') { alert('Your account must be approved by Super Admin before going online.'); return; }
+  p.online = !p.online;
+  pushAudit(p.name+' went '+(p.online?'online':'offline')+'.');
+  renderBizContent();
+  document.getElementById('biz-status-chip').innerHTML = '<span class="status-chip '+statusClass(p.status)+'">'+p.status+'</span> <span class="status-chip '+(p.online?'approved':'')+'">'+(p.online?'Online':'Offline')+'</span>';
+}
+
+/* ---------- RESTAURANT PORTAL ---------- */
+function bizKPI(iconName,label,value){ return '<div class="kpi-card"><div class="kpi-icon">'+icon(iconName,16,C.teal)+'</div><div class="kpi-value f-display">'+value+'</div><div class="kpi-label">'+label.toUpperCase()+'</div></div>'; }
+function computeUserFunnel(){
+  const registered = STATE.accounts.filter(function(a){ return a.role==='user'; }).length;
+  const foodOrders = STATE.orders.filter(function(o){ return !o.isSubscriptionPayment; });
+  const orderedEmails = [...new Set(foodOrders.map(function(o){ return o.customerEmail; }))];
+  const emailCounts = {};
+  foodOrders.forEach(function(o){ emailCounts[o.customerEmail] = (emailCounts[o.customerEmail]||0)+1; });
+  const repeatCustomers = Object.keys(emailCounts).filter(function(e){ return emailCounts[e] > 1; }).length;
+  const subscribed = STATE.accounts.filter(function(a){ return a.role==='user' && a.profile.subscriptions && a.profile.subscriptions.length>0; }).length;
+  return [
+    ['Registered Users', registered],
+    ['Placed an Order', orderedEmails.length],
+    ['Repeat Customers', repeatCustomers],
+    ['Active Subscribers', subscribed]
+  ];
+}
+function funnelWidget(title, stages){
+  const max = Math.max.apply(null, stages.map(function(s){return s[1];}).concat([1]));
+  return '<div class="panel"><div class="panel-title">'+title+'</div>'+
+    stages.map(function(s,i){
+      const pct = max>0 ? Math.round((s[1]/max)*100) : 0;
+      const convFromPrev = i>0 && stages[i-1][1]>0 ? Math.round((s[1]/stages[i-1][1])*100) : null;
+      return '<div style="margin-bottom:10px;">'+
+        '<div class="row between" style="margin-bottom:4px;"><span style="font-size:12px;">'+s[0]+'</span>'+
+        '<span class="f-mono" style="font-size:10.5px;color:var(--ink-soft);">'+s[1]+(i>0?' \u00b7 '+(convFromPrev===null?'N/A':convFromPrev+'%')+' of previous stage':'')+'</span></div>'+
+        '<div style="background:var(--mint);border-radius:8px;height:22px;overflow:hidden;"><div style="width:'+Math.max(pct,4)+'%;height:100%;background:linear-gradient(90deg,var(--teal),var(--coral));border-radius:8px;"></div></div>'+
+      '</div>';
+    }).join('')+
+  '</div>';
+}
+function restaurantDashboard(){
+  const r = getMyRestaurant();
+  const orders = restaurantOrdersFor(r.name);
+  const today = orders.filter(function(o){ return o.status!=='Cancelled'; });
+  const c = document.getElementById('biz-content');
+  if (r.status!=='Approved') {
+    c.innerHTML = '<div class="panel" style="background:var(--gold-tint);"><div class="panel-title">Verification '+r.status+'</div>'+
+      '<div style="font-size:12.5px;">Your restaurant listing will go live once Super Admin approves it. You can still manage your menu below \u2014 it will publish automatically on approval.</div></div>'+
+      restaurantMenuPanel(r);
+    return;
+  }
+  c.innerHTML =
+    '<div class="kpi-row">'+bizKPI('utensils','Menu Items', MEALS.filter(function(m){return m.restaurant===r.name;}).length)+bizKPI('cart','Orders (all time)', today.length)+bizKPI('rupee','Revenue', '\u20b9'+r.revenue)+bizKPI('star','Rating', r.rating)+'</div>'+
+    '<div class="panel"><div class="panel-title">Recent orders</div>'+
+      (today.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders yet.</div>' :
+      '<table class="data-table"><tr><th>Order</th><th>Items</th><th>Total</th><th>Status</th></tr>'+
+      today.slice(0,6).map(function(o){ return '<tr><td>'+o.id+'</td><td>'+o.items.length+'</td><td>\u20b9'+o.total+'</td><td><span class="status-chip">'+o.status+'</span></td></tr>'; }).join('')+'</table>')+
+    '</div>';
+}
+function restaurantMenuPanel(r){
+  const items = MEALS.filter(function(m){ return m.restaurant===r.name; });
+  return '<div class="panel"><div class="panel-title">Menu (‎'+items.length+' items)</div>'+
+    '<table class="data-table"><tr><th>Item</th><th>Price</th><th>Calories</th><th>Veg</th><th>Status</th></tr>'+
+    items.map(function(m){ return '<tr><td>'+m.name+'</td><td>\u20b9'+m.price+'</td><td>'+m.calories+'</td><td>'+(m.veg?'Veg':'Non-Veg')+'</td><td><span class="status-chip '+(m.available===false?'rejected':'approved')+'">'+(m.available===false?'Disabled':'Active')+'</span></td></tr>'; }).join('')+
+    '</table></div>';
+}
+let editingMealId = null;
+function bizMenu(){
+  const r = getMyRestaurant();
+  const items = MEALS.filter(function(m){ return m.restaurant===r.name; });
+  document.getElementById('biz-content').innerHTML =
+    '<div class="panel"><div class="panel-title">Add a new food item</div>'+
+      '<div class="form-grid2">'+
+        '<div class="form-field"><label>Name</label><input id="mi-name" placeholder="e.g. Grilled Paneer Bowl" /></div>'+
+        '<div class="form-field"><label>Price (\u20b9)</label><input id="mi-price" type="number" value="180" /></div>'+
+        '<div class="form-field"><label>Calories</label><input id="mi-cal" type="number" value="350" /></div>'+
+        '<div class="form-field"><label>Protein (g)</label><input id="mi-protein" type="number" value="20" /></div>'+
+        '<div class="form-field"><label>Carbs (g)</label><input id="mi-carbs" type="number" value="40" /></div>'+
+        '<div class="form-field"><label>Fat (g)</label><input id="mi-fat" type="number" value="10" /></div>'+
+        '<div class="form-field"><label>Fiber (g)</label><input id="mi-fiber" type="number" value="6" /></div>'+
+        '<div class="form-field"><label>Cuisine</label><select id="mi-cuisine">'+CUISINES.filter(function(c){return c!=='All Cuisines';}).map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+        '<div class="form-field"><label>Veg / Non-Veg</label><select id="mi-veg"><option value="true">Vegetarian</option><option value="false">Non-Vegetarian</option></select></div>'+
+        '<div class="form-field"><label>Health Goal Tag</label><select id="mi-tag">'+FILTER_TAGS.filter(function(t){return t!=='All';}).map(function(t){return '<option>'+t+'</option>';}).join('')+'</select></div>'+
+        '<div class="form-field"><label>Allergens</label><input id="mi-allergens" placeholder="e.g. Dairy, Nuts (or None)" /></div>'+
+        '<div class="form-field"><label>Prep Time (min)</label><input id="mi-prep" type="number" value="15" /></div>'+
+      '</div>'+
+      '<button class="btn btn-primary" onclick="addMenuItem()">'+icon('plus',13,'#fff')+' Add Item</button>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Your menu</div>'+
+    (items.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No items yet \u2014 add your first one above.</div>' :
+    items.map(function(m){
+      if (editingMealId === m.id) return menuItemEditForm(m);
+      return '<div class="row between" style="padding:10px 0;border-bottom:1px solid var(--line);">'+
+      '<div class="row gap8"><span class="veg-dot" style="border-color:'+(m.veg?C.teal:C.red)+';"><span style="background:'+(m.veg?C.teal:C.red)+';"></span></span>'+
+      '<div><div style="font-size:12.5px;font-weight:700;">'+m.name+'</div><div class="f-mono" style="font-size:10px;color:var(--ink-soft);">\u20b9'+m.price+' \u00b7 '+m.calories+' kcal \u00b7 '+m.cuisine+(m.available===false?' \u00b7 DISABLED':'')+'</div></div></div>'+
+      '<div class="row gap8"><button class="btn btn-ghost btn-sm" onclick="editingMealId='+m.id+'; bizMenu();">Edit</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="toggleMenuItem('+m.id+')">'+(m.available===false?'Enable':'Disable')+'</button></div>'+
+    '</div>'; }).join(''))+
+    '</div>';
+}
+function menuItemEditForm(m){
+  return '<div class="panel" style="background:var(--mint);margin:8px 0;">'+
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>Name</label><input id="em-name" value="'+m.name+'" /></div>'+
+      '<div class="form-field"><label>Price (\u20b9)</label><input id="em-price" type="number" value="'+m.price+'" /></div>'+
+      '<div class="form-field"><label>Calories</label><input id="em-cal" type="number" value="'+m.calories+'" /></div>'+
+      '<div class="form-field"><label>Protein (g)</label><input id="em-protein" type="number" value="'+m.protein+'" /></div>'+
+      '<div class="form-field"><label>Carbs (g)</label><input id="em-carbs" type="number" value="'+m.carbs+'" /></div>'+
+      '<div class="form-field"><label>Fat (g)</label><input id="em-fat" type="number" value="'+m.fat+'" /></div>'+
+      '<div class="form-field"><label>Fiber (g)</label><input id="em-fiber" type="number" value="'+m.fiber+'" /></div>'+
+      '<div class="form-field"><label>Allergens</label><input id="em-allergens" value="'+m.allergens+'" /></div>'+
+      '<div class="form-field"><label>Prep Time (min)</label><input id="em-prep" type="number" value="'+m.prep+'" /></div>'+
+    '</div>'+
+    '<div class="row gap8"><button class="btn btn-primary btn-sm" onclick="saveMenuItem('+m.id+')">Save Changes</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="editingMealId=null; bizMenu();">Cancel</button></div>'+
+  '</div>';
+}
+function saveMenuItem(id){
+  const m = MEALS.find(function(x){ return x.id===id; });
+  const name = document.getElementById('em-name').value.trim();
+  if (!name) { alert('Item name is required.'); return; }
+  m.name = name;
+  m.price = parseFloat(document.getElementById('em-price').value)||m.price;
+  m.calories = parseFloat(document.getElementById('em-cal').value)||m.calories;
+  m.protein = parseFloat(document.getElementById('em-protein').value)||m.protein;
+  m.carbs = parseFloat(document.getElementById('em-carbs').value)||m.carbs;
+  m.fat = parseFloat(document.getElementById('em-fat').value)||m.fat;
+  m.fiber = parseFloat(document.getElementById('em-fiber').value)||m.fiber;
+  m.allergens = document.getElementById('em-allergens').value || 'None';
+  m.prep = parseFloat(document.getElementById('em-prep').value)||m.prep;
+  editingMealId = null;
+  pushAudit(getMyRestaurant().name+' edited menu item: '+m.name+'.');
+  bizMenu();
+}
+function addMenuItem(){
+  const r = getMyRestaurant();
+  const name = document.getElementById('mi-name').value.trim();
+  if (!name) { alert('Item name is required.'); return; }
+  const newId = Math.max.apply(null, MEALS.map(function(m){return m.id;})) + 1;
+  MEALS.push({
+    id:newId, name:name, restaurant:r.name,
+    tags:[document.getElementById('mi-tag').value,'Healthy Living'],
+    calories:parseFloat(document.getElementById('mi-cal').value)||300,
+    protein:parseFloat(document.getElementById('mi-protein').value)||15,
+    carbs:parseFloat(document.getElementById('mi-carbs').value)||35,
+    fat:parseFloat(document.getElementById('mi-fat').value)||10,
+    fiber:parseFloat(document.getElementById('mi-fiber').value)||5,
+    ingredients:'Chef\u2019s selection', allergens:document.getElementById('mi-allergens').value||'None',
+    benefits:'Freshly prepared and nutrition-checked', price:parseFloat(document.getElementById('mi-price').value)||150,
+    prep:parseFloat(document.getElementById('mi-prep').value)||15, rating:4.3, distance:r.serviceArea,
+    veg:document.getElementById('mi-veg').value==='true', cuisine:document.getElementById('mi-cuisine').value, available:true
+  });
+  pushAudit(r.name+' added menu item: '+name+'.');
+  bizMenu();
+}
+function toggleMenuItem(id){
+  const m = MEALS.find(function(x){ return x.id===id; });
+  m.available = m.available===false ? true : false;
+  bizMenu();
+}
+function bizOrders(){
+  const r = getMyRestaurant();
+  const orders = restaurantOrdersFor(r.name);
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Incoming &amp; active orders</div>'+
+    (orders.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders yet.</div>' :
+    orders.map(function(o){
+      return '<div class="panel" style="background:var(--mint);">'+
+        '<div class="row between"><span style="font-size:12.5px;font-weight:700;">Order #'+o.id+'</span><span class="status-chip'+(o.status==='Cancelled'?' rejected':'')+'">'+o.status+'</span></div>'+
+        '<table class="data-table" style="margin:8px 0;"><tr><th>Item</th><th>Qty</th><th>Price</th><th>Calories</th></tr>'+
+        o.items.map(function(it){ const m = MEALS.find(function(x){return x.id===it.mealId;}); if (!m) return ''; return '<tr><td>'+m.name+'</td><td>'+it.qty+'</td><td>\u20b9'+(m.price*it.qty)+'</td><td>'+(m.calories*it.qty)+' kcal</td></tr>'; }).join('')+
+        '</table>'+
+        '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin-bottom:8px;">Order total: \u20b9'+o.total+' \u00b7 Delivery address: '+o.deliveryAddress+' \u00b7 Dietary note: '+o.dietaryNote+'</div>'+
+        (o.stageIndex===0 ? '<div class="row gap8"><button class="btn btn-primary btn-sm" onclick="acceptOrderRestaurant(\''+o.id+'\')">Accept</button><button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="rejectOrderRestaurant(\''+o.id+'\')">Reject</button></div>' : '')+
+        (o.stageIndex===1 ? '<button class="btn btn-primary btn-sm" onclick="markPreparing(\''+o.id+'\')">Mark Preparing</button>' : '')+
+        (o.stageIndex===2 ? '<button class="btn btn-primary btn-sm" onclick="markReady(\''+o.id+'\')">Mark Ready for Pickup</button>' : '')+
+        (o.stageIndex>=3 ? '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);">Handed off to delivery pipeline.</div>' : '')+
+      '</div>';
+    }).join(''))+
+  '</div>';
+}
+let editingPlanId = null;
+function bizPlans(){
+  const r = getMyRestaurant();
+  const myPlans = STATE.plans.filter(function(p){ return p.restaurant===r.name; });
+  document.getElementById('biz-content').innerHTML =
+    '<div class="panel"><div class="panel-title">Create a weekly plan</div>'+
+      '<div class="form-grid2">'+
+        '<div class="form-field"><label>Plan Name</label><input id="pl-name" placeholder="e.g. Weight Loss Weekly" /></div>'+
+        '<div class="form-field"><label>Type</label><select id="pl-type"><option>Vegetarian</option><option>Non-Vegetarian</option><option>Diet Plan</option></select></div>'+
+        '<div class="form-field"><label>Price (\u20b9/week)</label><input id="pl-price" type="number" value="1500" /></div>'+
+      '</div>'+
+      [1,2,3,4,5,6,7].map(function(d){ return '<div class="form-grid2"><div class="form-field"><label>Day '+d+' \u2014 Breakfast</label><input id="pl-d'+d+'-b" placeholder="Breakfast" /></div>'+
+        '<div class="form-field"><label>Day '+d+' \u2014 Lunch</label><input id="pl-d'+d+'-l" placeholder="Lunch" /></div>'+
+        '<div class="form-field"><label>Day '+d+' \u2014 Dinner</label><input id="pl-d'+d+'-di" placeholder="Dinner" /></div></div>'; }).join('')+
+      '<button class="btn btn-primary" onclick="addPlan()">Create Plan</button>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Your plans</div>'+
+    (myPlans.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No plans yet.</div>' :
+    myPlans.map(function(p){
+      if (editingPlanId === p.id) return planEditForm(p);
+      return '<div class="row between" style="padding:9px 0;border-bottom:1px solid var(--line);"><span style="font-size:12.5px;">'+p.name+' \u2014 \u20b9'+p.price+'/week'+(p.status==='Disabled'?' (Disabled)':'')+'</span>'+
+      '<div class="row gap8"><button class="btn btn-ghost btn-sm" onclick="editingPlanId=\''+p.id+'\'; bizPlans();">Edit</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="disablePlan(\''+p.id+'\')">'+(p.status==='Disabled'?'Enable':'Disable')+'</button></div></div>';
+    }).join(''))+
+    '</div>';
+}
+function planEditForm(p){
+  const days = ['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Day 7'];
+  return '<div class="panel" style="background:var(--mint);margin:8px 0;">'+
+    '<div class="form-grid2">'+
+      '<div class="form-field"><label>Plan Name</label><input id="ep-name" value="'+p.name+'" /></div>'+
+      '<div class="form-field"><label>Price (\u20b9/week)</label><input id="ep-price" type="number" value="'+p.price+'" /></div>'+
+    '</div>'+
+    p.days.map(function(d,i){ return '<div class="form-grid2"><div class="form-field"><label>'+days[i]+' \u2014 Breakfast</label><input id="ep-d'+i+'-b" value="'+d[0]+'" /></div>'+
+      '<div class="form-field"><label>'+days[i]+' \u2014 Lunch</label><input id="ep-d'+i+'-l" value="'+d[1]+'" /></div>'+
+      '<div class="form-field"><label>'+days[i]+' \u2014 Dinner</label><input id="ep-d'+i+'-di" value="'+d[2]+'" /></div></div>'; }).join('')+
+    '<div class="row gap8"><button class="btn btn-primary btn-sm" onclick="savePlan(\''+p.id+'\')">Save Changes</button>'+
+    '<button class="btn btn-ghost btn-sm" onclick="editingPlanId=null; bizPlans();">Cancel</button></div>'+
+  '</div>';
+}
+function savePlan(id){
+  const p = STATE.plans.find(function(x){ return x.id===id; });
+  const name = document.getElementById('ep-name').value.trim();
+  if (!name) { alert('Plan name is required.'); return; }
+  p.name = name;
+  p.price = parseFloat(document.getElementById('ep-price').value)||p.price;
+  p.days = p.days.map(function(d,i){ return [document.getElementById('ep-d'+i+'-b').value||d[0], document.getElementById('ep-d'+i+'-l').value||d[1], document.getElementById('ep-d'+i+'-di').value||d[2]]; });
+  editingPlanId = null;
+  pushAudit(getMyRestaurant().name+' edited plan: '+p.name+'.');
+  bizPlans();
+}
+function addPlan(){
+  const r = getMyRestaurant();
+  const name = document.getElementById('pl-name').value.trim();
+  if (!name) { alert('Plan name is required.'); return; }
+  const days = [1,2,3,4,5,6,7].map(function(d){ return [document.getElementById('pl-d'+d+'-b').value||'Meal', document.getElementById('pl-d'+d+'-l').value||'Meal', document.getElementById('pl-d'+d+'-di').value||'Meal']; });
+  STATE.plans.push({ id:'P'+(STATE.plans.length+1), restaurant:r.name, name:name, price:parseFloat(document.getElementById('pl-price').value)||1500, type:document.getElementById('pl-type').value, status:'Approved', days:days });
+  pushAudit(r.name+' created plan: '+name+'.');
+  bizPlans();
+}
+function disablePlan(id){
+  const p = STATE.plans.find(function(x){ return x.id===id; });
+  p.status = p.status==='Disabled' ? 'Approved' : 'Disabled';
+  bizPlans();
+}
+function bizPaymentsRestaurant(){
+  const r = getMyRestaurant();
+  const orders = restaurantOrdersFor(r.name).filter(function(o){ return o.status==='Delivered'; });
+  document.getElementById('biz-content').innerHTML =
+    '<div class="kpi-row">'+bizKPI('rupee','Total Revenue','\u20b9'+r.revenue)+bizKPI('cart','Completed Orders',orders.length)+bizKPI('star','Rating',r.rating)+'</div>'+
+    '<div class="panel"><div class="panel-title">Completed order payments</div>'+
+    (orders.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No completed orders yet.</div>' :
+    '<table class="data-table"><tr><th>Order</th><th>Date</th><th>Amount</th></tr>'+orders.map(function(o){ return '<tr><td>'+o.id+'</td><td>'+o.placedAt+'</td><td>\u20b9'+o.subtotal+'</td></tr>'; }).join('')+'</table>')+
+    '</div>';
+}
+function bizProfileRestaurant(){
+  const r = getMyRestaurant();
+  const isOpenNow = isRestaurantOpenNow(r);
+  document.getElementById('biz-content').innerHTML =
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Availability</div>'+
+      '<div class="row between" style="margin-bottom:10px;"><span style="font-size:12.5px;">Online (accepting orders)</span><button class="btn '+(r.isOnline?'btn-primary':'btn-ghost')+' btn-sm" onclick="toggleRestaurantOnline()">'+(r.isOnline?'Online':'Go Online')+'</button></div>'+
+      '<div class="row between" style="margin-bottom:10px;"><span style="font-size:12.5px;">Current status</span><span class="status-chip '+(r.isOnline && isOpenNow ? 'approved' : 'rejected')+'">'+(r.isOnline && isOpenNow ? 'Open' : 'Closed')+'</span></div>'+
+      '<div class="form-grid2">'+
+        '<div class="form-field"><label>Opening Time</label><input id="rp-open" type="time" value="'+r.openTime+'" /></div>'+
+        '<div class="form-field"><label>Closing Time</label><input id="rp-close" type="time" value="'+r.closeTime+'" /></div>'+
+      '</div>'+
+      '<div class="form-field"><label>Current Offer</label><input id="rp-offer" value="'+r.offers+'" placeholder="e.g. Free delivery above \u20b9299" /></div>'+
+      '<button class="btn btn-primary btn-sm" onclick="saveAvailability()">Save Availability &amp; Offer</button>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;"><div class="panel-title">Restaurant profile</div>'+
+    ['name','owner','phone','address','serviceArea','fssai','gst'].map(function(k){ return '<div class="form-field"><label>'+k.charAt(0).toUpperCase()+k.slice(1)+'</label><input value="'+r[k]+'" disabled /></div>'; }).join('')+
+    '<div class="f-mono" style="font-size:10.5px;color:var(--ink-soft);">Contact platform support to update verified business details (name, license, GST).</div></div>';
+}
+function isRestaurantOpenNow(r){
+  const now = new Date();
+  const cur = now.getHours()*60 + now.getMinutes();
+  const toMin = function(t){ const p = t.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); };
+  const open = toMin(r.openTime), close = toMin(r.closeTime);
+  return close > open ? (cur >= open && cur <= close) : true;
+}
+function toggleRestaurantOnline(){
+  const r = getMyRestaurant();
+  r.isOnline = !r.isOnline;
+  pushAudit(r.name+' went '+(r.isOnline?'online':'offline')+'.');
+  bizProfileRestaurant();
+}
+function saveAvailability(){
+  const r = getMyRestaurant();
+  r.openTime = document.getElementById('rp-open').value || r.openTime;
+  r.closeTime = document.getElementById('rp-close').value || r.closeTime;
+  r.hours = formatHours(r.openTime, r.closeTime);
+  r.offers = document.getElementById('rp-offer').value || 'None';
+  pushNotification('Availability and offer updated.');
+  bizProfileRestaurant();
+}
+function formatHours(open, close){
+  function fmt(t){ const p=t.split(':'); let h=parseInt(p[0]); const m=p[1]; const ap = h>=12?'PM':'AM'; h = h%12; if(h===0) h=12; return h+':'+m+' '+ap; }
+  return fmt(open)+' - '+fmt(close);
+}
+
+/* ---------- DELIVERY PARTNER PORTAL ---------- */
+function deliveryDashboard(){
+  const p = getMyPartner();
+  const c = document.getElementById('biz-content');
+  if (p.status!=='Approved') { c.innerHTML = '<div class="panel" style="background:var(--gold-tint);"><div class="panel-title">Verification '+p.status+'</div><div style="font-size:12.5px;">You\u2019ll be able to go online and accept deliveries once Super Admin approves your documents.</div></div>'; return; }
+  c.innerHTML = '<div class="panel"><div class="row between"><div><div class="panel-title" style="margin-bottom:2px;">You are currently '+(p.online?'Online':'Offline')+'</div><div class="f-mono" style="font-size:10.5px;color:var(--ink-soft);">Go online to see delivery requests</div></div>'+
+      '<button class="btn '+(p.online?'btn-ghost':'btn-primary')+'" onclick="bizToggleOnline()">'+(p.online?'Go Offline':'Go Online')+'</button></div></div>'+
+    '<div class="kpi-row">'+bizKPI('truck','Deliveries (all time)',p.deliveries)+bizKPI('rupee','Earnings','\u20b9'+p.earnings)+bizKPI('star','Rating',p.rating)+'</div>';
+}
+function deliveryRequests(){
+  const p = getMyPartner();
+  const ready = STATE.orders.filter(function(o){ return o.stageIndex===3 && !o.partner; });
+  const mine = STATE.orders.filter(function(o){ return o.partner && o.partner[1]===p.phone && o.stageIndex>=4 && o.stageIndex<6; });
+  document.getElementById('biz-content').innerHTML =
+    '<div class="panel"><div class="panel-title">Available delivery requests</div>'+
+    (!p.online ? '<div style="font-size:12.5px;color:var(--ink-soft);">Go online from Dashboard to see requests.</div>' :
+    ready.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders ready for pickup right now.</div>' :
+    ready.map(function(o){ return '<div class="row between" style="padding:10px 0;border-bottom:1px solid var(--line);"><span style="font-size:12.5px;">Order #'+o.id+' \u2014 '+o.restaurantName+' \u2192 '+o.deliveryAddress+'</span><button class="btn btn-primary btn-sm" onclick="deliveryAcceptPickup(\''+o.id+'\')">Accept &amp; Pick Up</button></div>'; }).join(''))+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Your active deliveries</div>'+
+    (mine.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No active deliveries.</div>' :
+    mine.map(function(o){ return '<div class="panel" style="background:var(--mint);"><div class="row between"><span style="font-size:12.5px;font-weight:700;">Order #'+o.id+'</span><span class="status-chip">'+o.status+'</span></div>'+
+      '<div class="f-mono" style="font-size:10px;color:var(--ink-soft);margin:4px 0 8px;">Deliver to: '+o.deliveryAddress+'</div>'+
+      (o.stageIndex===4 ? '<button class="btn btn-primary btn-sm" onclick="deliveryStartTransit(\''+o.id+'\')">Start Out for Delivery</button>' :
+      '<div><div class="form-field"><label>Enter delivery OTP from customer</label><input id="otp-input-'+o.id+'" maxlength="4" placeholder="4-digit code" /></div>'+
+      '<div class="inline-error hidden" id="otp-error-'+o.id+'"></div><button class="btn btn-primary btn-sm" onclick="deliveryMarkDelivered(\''+o.id+'\')">Confirm Delivered</button></div>')+
+    '</div>'; }).join(''))+
+    '</div>';
+}
+function deliveryHistory(){
+  const p = getMyPartner();
+  const done = STATE.orders.filter(function(o){ return o.partner && o.partner[1]===p.phone && o.status==='Delivered'; });
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Delivery history</div>'+
+    (done.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No completed deliveries yet.</div>' :
+    '<table class="data-table"><tr><th>Order</th><th>Delivered At</th><th>Address</th></tr>'+done.map(function(o){ return '<tr><td>'+o.id+'</td><td>'+o.deliveredAt+'</td><td>'+o.deliveryAddress+'</td></tr>'; }).join('')+'</table>')+
+    '</div>';
+}
+function deliveryEarnings(){
+  const p = getMyPartner();
+  document.getElementById('biz-content').innerHTML = '<div class="kpi-row">'+bizKPI('rupee','Total Earnings','\u20b9'+p.earnings)+bizKPI('truck','Total Deliveries',p.deliveries)+bizKPI('star','Rating',p.rating)+'</div>'+
+    '<div class="panel"><div class="panel-title">Earnings breakdown</div><div style="font-size:12.5px;color:var(--ink-soft);">\u20b935 per completed delivery \u00b7 '+p.deliveries+' deliveries completed.</div></div>';
+}
+function deliveryProfile(){
+  const p = getMyPartner();
+  document.getElementById('biz-content').innerHTML = '<div class="panel" style="max-width:560px;"><div class="panel-title">Delivery partner profile</div>'+
+    ['name','phone','vehicle','license'].map(function(k){ return '<div class="form-field"><label>'+k.charAt(0).toUpperCase()+k.slice(1)+'</label><input value="'+p[k]+'" disabled /></div>'; }).join('')+'</div>';
+}
+
+/* ---------- ADMIN PORTAL ---------- */
+function adminOverview(){
+  document.getElementById('biz-content').innerHTML = '<div class="kpi-row">'+
+    bizKPI('users','Total Users', STATE.accounts.filter(function(a){return a.role==='user';}).length)+
+    bizKPI('utensils','Restaurants', RESTAURANTS.length)+
+    bizKPI('cart','Total Orders', STATE.orders.length)+
+    bizKPI('truck','Delivery Partners', DELIVERY_PARTNERS.length)+
+  '</div>'+
+  funnelWidget('User conversion funnel', computeUserFunnel())+
+  '<div class="panel"><div class="panel-title">Platform snapshot</div><div style="font-size:12.5px;color:var(--ink-soft);">Use the sidebar to manage users, restaurants, orders and delivery partners.</div></div>';
+}
+let adminExpanded = null;
+function adminUsers(){
+  const users = STATE.accounts.filter(function(a){ return a.role==='user'; });
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Users</div>'+
+    users.map(function(a){
+      const expanded = adminExpanded==='user-'+a.email;
+      return '<div class="row between" style="padding:10px 0;border-bottom:1px solid var(--line);">'+
+        '<div><div style="font-size:12.5px;font-weight:700;">'+a.profile.name+'</div><div class="f-mono" style="font-size:10px;color:var(--ink-soft);">'+a.email+' \u00b7 '+a.profile.goal+'</div></div>'+
+        '<div class="row gap8"><button class="btn btn-ghost btn-sm" onclick="adminExpanded='+(expanded?'null':"'user-"+a.email+"'")+'; adminUsers();">'+(expanded?'Hide':'View Details')+'</button></div>'+
+      '</div>'+
+      (expanded ? '<div class="panel" style="background:var(--mint);margin:0 0 10px;">'+
+        ['Age: '+a.profile.age, 'Gender: '+a.profile.gender, 'Height/Weight: '+a.profile.height+'cm / '+a.profile.weight+'kg', 'Goal: '+a.profile.goal,
+         'Medical Conditions: '+(a.profile.conditions||'None'), 'Allergies: '+(a.profile.allergies||'None'), 'Food Preference: '+a.profile.preferences,
+         'Location: '+a.profile.location, 'Wallet: \u20b9'+a.profile.wallet].map(function(l){return '<div style="font-size:12px;margin-bottom:4px;">'+l+'</div>';}).join('')+
+      '</div>' : '');
+    }).join('')+
+    '</div>';
+}
+function adminRestaurants(){
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Restaurants</div>'+
+    RESTAURANTS.map(function(r){
+      const expanded = adminExpanded==='rest-'+r.id;
+      return '<div class="row between" style="padding:10px 0;border-bottom:1px solid var(--line);">'+
+        '<div><div style="font-size:12.5px;font-weight:700;">'+r.name+'</div><div class="f-mono" style="font-size:10px;color:var(--ink-soft);">'+r.owner+' \u00b7 <span class="status-chip '+statusClass(r.status)+'">'+r.status+'</span> \u00b7 \u20b9'+r.revenue+'</div></div>'+
+        '<div class="row gap8"><a class="btn btn-ghost btn-sm" href="tel:'+r.phone+'">'+icon('phone',12,'currentColor')+' Call</a>'+
+        '<button class="btn btn-ghost btn-sm" onclick="adminExpanded='+(expanded?'null':"'rest-"+r.id+"'")+'; adminRestaurants();">'+(expanded?'Hide':'View Details')+'</button></div>'+
+      '</div>'+
+      (expanded ? '<div class="panel" style="background:var(--mint);margin:0 0 10px;">'+
+        ['Phone: '+r.phone,'Address: '+r.address,'Cuisines: '+r.cuisines.join(', '),'Hours: '+r.hours,'Service Area: '+r.serviceArea,'FSSAI: '+r.fssai,'GST: '+r.gst,'Current Offer: '+r.offers].map(function(l){return '<div style="font-size:12px;margin-bottom:4px;">'+l+'</div>';}).join('')+
+      '</div>' : '');
+    }).join('')+
+    '</div>';
+}
+function adminOrders(){
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">All orders</div>'+
+    (STATE.orders.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No orders yet.</div>' :
+    '<table class="data-table"><tr><th>Order</th><th>Restaurant</th><th>Total</th><th>Status</th></tr>'+
+    STATE.orders.map(function(o){ return '<tr><td>'+o.id+'</td><td>'+o.restaurantName+'</td><td>\u20b9'+o.total+'</td><td><span class="status-chip'+(o.status==='Cancelled'?' rejected':'')+'">'+o.status+'</span></td></tr>'; }).join('')+'</table>')+
+    '</div>';
+}
+function adminDelivery(){
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Delivery partners</div>'+
+    DELIVERY_PARTNERS.map(function(p){
+      const expanded = adminExpanded==='del-'+p.id;
+      return '<div class="row between" style="padding:10px 0;border-bottom:1px solid var(--line);">'+
+        '<div><div style="font-size:12.5px;font-weight:700;">'+p.name+'</div><div class="f-mono" style="font-size:10px;color:var(--ink-soft);">'+p.vehicle+' \u00b7 <span class="status-chip '+statusClass(p.status)+'">'+p.status+'</span> \u00b7 '+(p.online?'Online':'Offline')+' \u00b7 '+p.deliveries+' deliveries</div></div>'+
+        '<div class="row gap8"><a class="btn btn-ghost btn-sm" href="tel:'+p.phone+'">'+icon('phone',12,'currentColor')+' Call</a>'+
+        '<button class="btn btn-ghost btn-sm" onclick="adminExpanded='+(expanded?'null':"'del-"+p.id+"'")+'; adminDelivery();">'+(expanded?'Hide':'View Details')+'</button></div>'+
+      '</div>'+
+      (expanded ? '<div class="panel" style="background:var(--mint);margin:0 0 10px;">'+
+        ['Phone: '+p.phone,'Vehicle: '+p.vehicle,'License: '+p.license,'Earnings: \u20b9'+p.earnings,'Rating: '+p.rating].map(function(l){return '<div style="font-size:12px;margin-bottom:4px;">'+l+'</div>';}).join('')+
+      '</div>' : '');
+    }).join('')+
+    '</div>';
+}
+
+/* ---------- SUPER ADMIN PORTAL ---------- */
+function computeRestaurantFunnel(){
+  const registered = RESTAURANTS.length;
+  const approved = RESTAURANTS.filter(function(r){return r.status==='Approved';}).length;
+  const withOrders = [...new Set(STATE.orders.filter(function(o){return !o.isSubscriptionPayment;}).map(function(o){return o.restaurantName;}))].length;
+  const withRevenue = RESTAURANTS.filter(function(r){return r.revenue>0;}).length;
+  return [
+    ['Registered Restaurants', registered],
+    ['Approved by Super Admin', approved],
+    ['Received an Order', withOrders],
+    ['Generated Revenue', withRevenue]
+  ];
+}
+function superOverview(){
+  document.getElementById('biz-content').innerHTML = '<div class="kpi-row">'+
+    bizKPI('utensils','Approved Restaurants', RESTAURANTS.filter(function(r){return r.status==='Approved';}).length)+
+    bizKPI('shield','Pending Verifications', RESTAURANTS.filter(function(r){return r.status==='Pending';}).length + DELIVERY_PARTNERS.filter(function(p){return p.status==='Pending';}).length)+
+    bizKPI('cart','Platform Orders', STATE.orders.length)+
+    bizKPI('rupee','Platform Revenue', '\u20b9'+RESTAURANTS.reduce(function(s,r){return s+r.revenue;},0))+
+  '</div>'+
+  funnelWidget('Restaurant onboarding funnel', computeRestaurantFunnel())+
+  funnelWidget('User conversion funnel', computeUserFunnel())+
+  '<div class="panel"><div class="panel-title">Welcome, Super Admin</div><div style="font-size:12.5px;color:var(--ink-soft);">Use Verification Queue to approve new restaurants and delivery partners before they go live.</div></div>';
+}
+function superVerification(){
+  const pendingR = RESTAURANTS.filter(function(r){ return r.status==='Pending'; });
+  const pendingD = DELIVERY_PARTNERS.filter(function(p){ return p.status==='Pending'; });
+  document.getElementById('biz-content').innerHTML =
+    '<div class="panel"><div class="panel-title">Restaurant verification queue ('+pendingR.length+')</div>'+
+    (pendingR.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No pending restaurants.</div>' :
+    pendingR.map(function(r){ return '<div class="panel" style="background:var(--mint);"><div style="font-size:13px;font-weight:700;">'+r.name+'</div>'+
+      '<div class="f-mono" style="font-size:10.5px;color:var(--ink-soft);margin:4px 0 8px;">Owner: '+r.owner+' \u00b7 '+r.email+' \u00b7 '+r.phone+'<br/>Address: '+r.address+' \u00b7 FSSAI: '+r.fssai+' \u00b7 GST: '+r.gst+'</div>'+
+      '<div class="row gap8"><button class="btn btn-primary btn-sm" onclick="approveRestaurant(\''+r.id+'\')">Approve</button>'+
+      '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="rejectRestaurant(\''+r.id+'\')">Reject</button></div></div>'; }).join(''))+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Delivery partner verification queue ('+pendingD.length+')</div>'+
+    (pendingD.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No pending delivery partners.</div>' :
+    pendingD.map(function(p){ return '<div class="panel" style="background:var(--mint);"><div style="font-size:13px;font-weight:700;">'+p.name+'</div>'+
+      '<div class="f-mono" style="font-size:10.5px;color:var(--ink-soft);margin:4px 0 8px;">'+p.email+' \u00b7 '+p.phone+'<br/>Vehicle: '+p.vehicle+' \u00b7 License: '+p.license+'</div>'+
+      '<div class="row gap8"><button class="btn btn-primary btn-sm" onclick="approveDelivery(\''+p.id+'\')">Approve</button>'+
+      '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="rejectDelivery(\''+p.id+'\')">Reject</button></div></div>'; }).join(''))+
+    '</div>';
+}
+function approveRestaurant(id){ const r = RESTAURANTS.find(function(x){return x.id===id;}); r.status='Approved'; r.rating=4.2; pushAudit('Super Admin approved restaurant: '+r.name+'.'); superVerification(); }
+function rejectRestaurant(id){ const r = RESTAURANTS.find(function(x){return x.id===id;}); r.status='Rejected'; pushAudit('Super Admin rejected restaurant: '+r.name+'.'); superVerification(); }
+function approveDelivery(id){ const p = DELIVERY_PARTNERS.find(function(x){return x.id===id;}); p.status='Approved'; p.rating=4.3; pushAudit('Super Admin approved delivery partner: '+p.name+'.'); superVerification(); }
+function rejectDelivery(id){ const p = DELIVERY_PARTNERS.find(function(x){return x.id===id;}); p.status='Rejected'; pushAudit('Super Admin rejected delivery partner: '+p.name+'.'); superVerification(); }
+function superUsers(){
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">All platform accounts</div>'+
+    '<table class="data-table"><tr><th>Name</th><th>Email</th><th>Role</th></tr>'+
+    STATE.accounts.map(function(a){ return '<tr><td>'+a.profile.name+'</td><td>'+a.email+'</td><td>'+a.role+'</td></tr>'; }).join('')+
+    '</table></div>';
+}
+function superAnalytics(){
+  const data = RESTAURANTS.map(function(r){ return [r.name, r.revenue]; });
+  const max = Math.max.apply(null, data.map(function(d){return d[1];}).concat([1]));
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Revenue by restaurant</div>'+
+    '<div class="content-bars">'+data.map(function(d){ return '<div class="content-bar-col"><div class="content-bar-value">\u20b9'+d[1]+'</div><div class="content-bar-rect" style="height:'+((d[1]/max)*130)+'px;"></div><div class="content-bar-label">'+d[0]+'</div></div>'; }).join('')+'</div></div>';
+}
+function superAudit(){
+  document.getElementById('biz-content').innerHTML = '<div class="panel"><div class="panel-title">Audit log</div>'+
+    (STATE.auditLog.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No events yet.</div>' :
+    STATE.auditLog.map(function(e){ return '<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-size:12px;">'+e.msg+'</span><span class="f-mono" style="font-size:10px;color:var(--ink-soft);">'+e.at+'</span></div>'; }).join(''))+
+    '</div>';
+}
+const BIZ_RENDERERS = {
+  restaurant: { dashboard:restaurantDashboard, menu:bizMenu, orders:bizOrders, plans:bizPlans, payments:bizPaymentsRestaurant, profile:bizProfileRestaurant },
+  delivery: { dashboard:deliveryDashboard, requests:deliveryRequests, history:deliveryHistory, earnings:deliveryEarnings, profile:deliveryProfile },
+  admin: { overview:adminOverview, users:adminUsers, restaurants:adminRestaurants, orders:adminOrders, delivery:adminDelivery },
+  superadmin: { overview:superOverview, verification:superVerification, users:superUsers, analytics:superAnalytics, audit:superAudit }
+};
+
+/* ============================================================
+   SUBSCRIPTIONS
+   ============================================================ */
+let subViewingId = null, subCheckoutId = null;
+function renderSubscriptions(){
+  const u = STATE.currentUser;
+  const approvedNames = RESTAURANTS.filter(function(r){return r.status==='Approved';}).map(function(r){return r.name;});
+  const available = STATE.plans.filter(function(p){ return approvedNames.indexOf(p.restaurant)!==-1 && p.status!=='Disabled'; });
+  let html = '<div class="meal-grid">'+
+    available.map(function(p){
+      const active = u.subscriptions.indexOf(p.id) !== -1;
+      return '<div class="meal-card"><div class="meal-name">'+p.name+'</div>'+
+        '<div class="f-mono" style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;">'+p.restaurant+' \u00b7 '+p.type+'</div>'+
+        '<div style="font-family:\'Baloo 2\',sans-serif;font-size:16px;font-weight:700;margin-bottom:10px;">\u20b9'+p.price+'/week</div>'+
+        (active ? '<span class="status-chip approved">Subscribed</span>' :
+        '<button class="btn btn-primary btn-sm" onclick="viewPlan(\''+p.id+'\')">View Plan</button>')+
+      '</div>';
+    }).join('')+'</div>';
+  if (subViewingId) {
+    const p = STATE.plans.find(function(x){return x.id===subViewingId;});
+    if (p) html += planDetailPanel(p);
+  }
+  if (subCheckoutId) {
+    const p = STATE.plans.find(function(x){return x.id===subCheckoutId;});
+    if (p) html += subscriptionCheckoutPanel(p);
+  }
+  document.getElementById('u-content').innerHTML = html;
+}
+function planDetailPanel(p){
+  const days = ['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Day 7'];
+  return '<div class="panel"><div class="row between"><div class="panel-title" style="margin-bottom:2px;">'+p.name+'</div><button class="icon-btn" onclick="subViewingId=null; renderSubscriptions();">'+icon('x',13,'currentColor')+'</button></div>'+
+    '<div class="f-mono" style="font-size:11px;color:var(--ink-soft);margin-bottom:12px;">'+p.restaurant+' \u00b7 '+p.type+' \u00b7 \u20b9'+p.price+'/week \u00b7 Delivery: within your scheduled window</div>'+
+    '<table class="data-table"><tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th></tr>'+
+    p.days.map(function(d,i){ return '<tr><td>'+days[i]+'</td><td>'+d[0]+'</td><td>'+d[1]+'</td><td>'+d[2]+'</td></tr>'; }).join('')+
+    '</table>'+
+    '<div class="panel-title" style="margin-top:14px;">Plan benefits</div>'+
+    '<div style="font-size:12px;color:var(--ink-soft);">Free delivery on all plan meals \u00b7 Nutrition-matched to your profile \u00b7 Pause or cancel any week</div>'+
+    '<button class="btn btn-primary" style="margin-top:14px;" onclick="startSubscribeCheckout(\''+p.id+'\')">Subscribe \u2014 \u20b9'+p.price+'/week</button>'+
+  '</div>';
+}
+function viewPlan(id){ subViewingId = id; subCheckoutId = null; renderSubscriptions(); }
+function startSubscribeCheckout(id){ subCheckoutId = id; renderSubscriptions(); document.getElementById('u-content').scrollIntoView({behavior:'smooth'}); }
+function subscriptionCheckoutPanel(p){
+  return '<div class="panel" style="background:var(--mint);"><div class="panel-title">Confirm &amp; pay for '+p.name+'</div>'+
+    '<div class="row between" style="margin-bottom:12px;"><span style="font-size:13px;">Weekly subscription</span><span style="font-family:\'Baloo 2\',sans-serif;font-size:17px;font-weight:700;">\u20b9'+p.price+'</span></div>'+
+    '<div class="form-field"><label>Payment Method</label><select id="sub-pay-method"><option>Online Payment (Razorpay)</option><option>Cash on Delivery</option></select></div>'+
+    '<button class="btn btn-primary" onclick="confirmSubscribePayment(\''+p.id+'\')">Pay &amp; Subscribe</button>'+
+  '</div>';
+}
+async function confirmSubscribePayment(id){
+  const p = STATE.plans.find(function(x){return x.id===id;});
+  const method = document.getElementById('sub-pay-method').value;
+  let paymentRef = null;
+  if (method==='Online Payment (Razorpay)') {
+    try { paymentRef = await createRazorpayPayment(p.price, 'NalamUnavu subscription — '+p.name); }
+    catch(e){ alert(e.message); return; }
+  } else {
+    alert('Subscriptions require online payment before activation.'); return;
+  }
+  const rest = RESTAURANTS.find(function(r){return r.name===p.restaurant;});
+  if (rest) rest.revenue += p.price;
+  if (STATE.currentUser.subscriptions.indexOf(p.id)===-1) STATE.currentUser.subscriptions.push(p.id);
+  STATE.orders.unshift({ id:'SUB-'+Math.floor(1000+Math.random()*9000), items:[], total:p.price, subtotal:p.price, deliveryFee:0, taxes:0,
+    method:method, paymentStatus:'Paid', restaurantName:p.restaurant, status:'Delivered', stageIndex:6, rating:0, placedAt:new Date().toLocaleString(),
+    transactionId:paymentRef.paymentId, gatewayOrderId:paymentRef.orderId, isSubscriptionPayment:true, planName:p.name });
+  subCheckoutId = null; subViewingId = null;
+  pushNotification('Payment successful — subscribed to '+p.name+'.');
+  alert('Payment verified successfully. You are now subscribed to '+p.name+'.');
+  renderSubscriptions(); renderShellChrome('subscriptions');
+}
+
+/* ============================================================
+   PAYMENTS
+   ============================================================ */
+function renderPayments(){
+  const u = STATE.currentUser;
+  document.getElementById('u-content').innerHTML =
+    '<div class="panel"><div class="panel-title">Wallet</div>'+
+      '<div style="font-family:\'Baloo 2\',sans-serif;font-size:26px;font-weight:700;margin-bottom:10px;">\u20b9'+u.wallet.toLocaleString('en-IN')+'</div>'+
+      '<div class="row gap8"><input id="topup-amt" type="number" placeholder="Amount" style="width:120px;padding:9px;border:1px solid var(--line);border-radius:9px;" />'+
+      '<button class="btn btn-primary btn-sm" onclick="addMoney()">Add Money</button></div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-title">Payment history</div>'+
+      (STATE.orders.length===0 ? '<div style="font-size:12.5px;color:var(--ink-soft);">No payments yet.</div>' :
+      '<table class="data-table"><tr><th>Order</th><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th></th></tr>'+
+      STATE.orders.map(o=>'<tr><td>'+o.id+'</td><td>'+o.placedAt+'</td><td>'+o.method+'</td><td>\u20b9'+o.total+'</td><td><span class="status-chip'+(o.status==='Cancelled'?' danger':'')+'">'+(o.status==='Cancelled'?'Refunded':(o.paymentStatus||'Paid'))+'</span></td>'+
+      '<td><button class="btn btn-ghost btn-sm" onclick="downloadReceipt(\''+o.id+'\')">Receipt</button></td></tr>').join('')+
+      '</table>')+
+    '</div>';
+}
+function addMoney(){
+  const v = parseFloat(document.getElementById('topup-amt').value);
+  if (!v || v<=0) return;
+  STATE.currentUser.wallet += v;
+  pushNotification('Added \u20b9'+v+' to wallet.');
+  renderPayments(); renderShellChrome('payments');
+}
+
+/* Note: per spec there is no separate History menu. Nutrition/health
+   trend charts live in renderHealth() above; order history is inside
+   renderOrders(); payment history is inside renderPayments(). */
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function renderSettings(){
+  const u = STATE.currentUser;
+  document.getElementById('u-content').innerHTML =
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Password &amp; Security</div>'+
+      '<div class="form-field"><label>Current Password</label><input id="set-cur-pass" type="password" /></div>'+
+      '<div class="form-field"><label>New Password</label><input id="set-new-pass" type="password" /></div>'+
+      '<div class="form-field"><label>Confirm New Password</label><input id="set-new-pass2" type="password" /></div>'+
+      '<div class="inline-error hidden" id="set-pass-error"></div>'+
+      '<button class="btn btn-primary btn-sm" onclick="changePassword()">Update Password</button>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Appearance &amp; Language</div>'+
+      '<div class="row between" style="margin-bottom:10px;"><span style="font-size:12.5px;">Dark mode</span><button class="btn btn-ghost btn-sm" onclick="toggleTheme()">Toggle</button></div>'+
+      '<div class="form-field"><label>Language</label><select id="set-language"><option>English</option><option>\u0ba4\u0bae\u0bbf\u0bb4\u0bcd (Tamil)</option><option>\u0939\u093f\u0928\u094d\u0926\u0940 (Hindi)</option></select></div>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Food &amp; Diet Preferences</div>'+
+      '<div class="form-field"><label>Food Preference</label><select id="set-food-pref"><option>Vegetarian</option><option>Non-Vegetarian</option><option>Both</option></select></div>'+
+      '<div class="form-field"><label>Budget (\u20b9 per meal)</label><input id="set-budget" type="number" value="'+parseBudget(u.budget)+'" /></div>'+
+      '<button class="btn btn-primary btn-sm" onclick="saveFoodPrefs()">Save Preferences</button>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Delivery Location</div>'+
+      '<div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;">'+u.location+'</div>'+
+      '<button class="btn btn-ghost btn-sm" onclick="route(\'profile\')">Edit in Profile</button>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Notification Preferences</div>'+
+      checkboxRow('set-order','Order updates',u.prefs.orderUpdates)+
+      checkboxRow('set-health','Health reminders',u.prefs.healthReminders)+
+      checkboxRow('set-promo','Promotional offers',u.prefs.promo)+
+      '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="savePrefs()">Save Preferences</button>'+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Privacy</div>'+
+      checkboxRow('set-privacy-share','Share anonymized data to improve AI recommendations', true)+
+    '</div>'+
+    '<div class="panel" style="max-width:560px;">'+
+      '<div class="panel-title">Account</div>'+
+      '<div class="row gap8 wrap">'+
+      '<button class="btn btn-ghost btn-sm" onclick="route(\'profile\')">Edit Profile</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="logoutUser()">Logout</button>'+
+      '<button class="btn btn-ghost btn-sm" style="color:var(--gold);border-color:var(--gold);" onclick="deactivateAccount()">Deactivate Account</button>'+
+      '<button class="btn btn-ghost btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteAccount()">Delete Account</button>'+
+      '</div>'+
+    '</div>';
+}
+function changePassword(){
+  const acc = STATE.accounts.find(function(a){ return a.email===STATE.currentUser.email; });
+  const cur = document.getElementById('set-cur-pass').value;
+  const np = document.getElementById('set-new-pass').value;
+  const np2 = document.getElementById('set-new-pass2').value;
+  const err = document.getElementById('set-pass-error');
+  if (cur !== acc.password) { err.textContent = 'Current password is incorrect.'; err.classList.remove('hidden'); return; }
+  if (!np || np.length < 6) { err.textContent = 'New password must be at least 6 characters.'; err.classList.remove('hidden'); return; }
+  if (np !== np2) { err.textContent = 'New password and confirmation do not match.'; err.classList.remove('hidden'); return; }
+  err.classList.add('hidden');
+  acc.password = np;
+  document.getElementById('set-cur-pass').value = '';
+  document.getElementById('set-new-pass').value = '';
+  document.getElementById('set-new-pass2').value = '';
+  pushNotification('Password updated successfully.');
+  alert('Password updated successfully.');
+}
+function saveFoodPrefs(){
+  const u = STATE.currentUser;
+  u.preferences = document.getElementById('set-food-pref').value;
+  u.budget = '\u20b9'+(document.getElementById('set-budget').value||200)+'/meal';
+  pushNotification('Food preferences updated \u2014 your recommendations have been refreshed.');
+  renderSettings();
+}
+function deactivateAccount(){
+  if (!confirm('Deactivate your account? You can log back in later to reactivate.')) return;
+  pushAudit(STATE.currentUser.name+' deactivated their account.');
+  logoutUser();
+}
+function checkboxRow(id,label,checked){
+  return '<div class="row between" style="padding:6px 0;"><span style="font-size:12.5px;">'+label+'</span><input id="'+id+'" type="checkbox" '+(checked?'checked':'')+' style="width:18px;height:18px;" /></div>';
+}
+function savePrefs(){
+  const u = STATE.currentUser;
+  u.prefs.orderUpdates = document.getElementById('set-order').checked;
+  u.prefs.healthReminders = document.getElementById('set-health').checked;
+  u.prefs.promo = document.getElementById('set-promo').checked;
+  pushNotification('Notification preferences saved.');
+}
+function deleteAccount(){
+  if (!confirm('This will permanently delete your account for this session. Continue?')) return;
+  STATE.accounts = STATE.accounts.filter(a=>a.email!==STATE.currentUser.email);
+  logoutUser();
+}
+
+/* init */
+renderPreAuthRoute();
+</script>
+</body>
+</html>
